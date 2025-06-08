@@ -35,11 +35,11 @@ const Header = () => {
 
     return (
     <div
-        className={`fixed top-0 left-0 w-full z-50  border-b border-n-6 lg:bg-n-8/90 lg:backdrop-blur-sm ${
+        className={`fixed top-0 left-0 w-full z-50  border-b border-n-6 bg-n-8 lg:bg-n-8/90 lg:backdrop-blur-sm ${
         openNavigation ? "bg-n-8" : "bg-n-8/90 backdrop-blur-sm"
         }`}
     >
-        <div className="flex items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
+        <div className="flex bg-n-8 items-center px-5 lg:px-7.5 xl:px-10 max-lg:py-4">
             <a className="block w-[12rem] xl:mr-8" href="#hero">
             <div className="flex items-center px-5 space-x-3">
                 <div className="shrink-0 w-10 h-10 rounded-full bg-white border border-black flex items-center justify-center">
@@ -67,7 +67,7 @@ const Header = () => {
                     px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-base lg:font-semibold
                     ${item.url === pathname.hash ? "z-2 lg:text-n-1" : "lg:text-n-1/50"}
                     lg:leading-5 lg:hover:text-n-1 xl:px-12
-                    after:content-[''] after:absolute after:left-5 after:bottom-5 after:h-[2px] after:bg-n-1 after:transition-all after:duration-300 after:w-0 lg:hover:after:w-1/3`}
+                    after:content-[''] after:absolute after:left-8 after:bottom-5 after:h-[2px] after:bg-n-1 after:transition-all after:duration-300 after:w-0 lg:hover:after:w-1/3`}
                 >
                     {item.title}
                 </a>
