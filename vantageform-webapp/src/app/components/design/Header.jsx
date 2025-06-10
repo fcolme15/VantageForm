@@ -98,8 +98,6 @@ export const HamburgerMenu = () => {
             width={688}
             height={953}
             alt=""
-            aria-hidden="true"
-            placeholder="empty"
           />
         </div>
   
