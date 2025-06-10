@@ -87,11 +87,14 @@ export const BackgroundBalls = React.memo(() => {
   );
 });
 
-
 export const HamburgerMenu = () => {
     return (
-      <div className="absolute inset-0 pointer-events-none lg:hidden">
-        <div className="absolute inset-0 opacity-[.3]">
+      <div className="absolute inset-0 pointer-events-none lg:hidden z-30">
+        {/* Solid background layer to block main page content */}
+        <div className="absolute inset-0 bg-n-8"></div>
+        
+        {/* Your background image on top of the solid background */}
+        <div className="absolute inset-0 opacity-30">
           <Image
             className="w-full h-full object-cover"
             src={background}
@@ -100,11 +103,9 @@ export const HamburgerMenu = () => {
             alt=""
           />
         </div>
-  
         <Rings />
         <SideLines />
-        <BackgroundBalls/>
-        {/* <BackgroundCircles /> */}
+        <BackgroundBalls />
       </div>
     );
   };
