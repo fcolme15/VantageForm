@@ -4,6 +4,7 @@ import Scene from "./components/Scene";
 import ButtonGradient from "./assets/svg/ButtonGradient";
 import Hero from "./components/Hero";
 import Footer from "./components/Footer";
+import About from "./components/About";
 
 
 export default function Home() {
@@ -11,7 +12,9 @@ export default function Home() {
     <div >
       <Header />
       <Hero />
+      <About/>
       <div className="relative w-full h-[100vh]"/>
+      
       <Footer/>
       <ButtonGradient />
     </div>
