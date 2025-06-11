@@ -33,7 +33,7 @@ const Hero = () => {
       </div>
 
       <div className="container relative z-10" ref={parallaxRef}>
-        <div className="relative max-w-[62rem] mx-auto text-center mb-1 md:mb-10 lg:mb-[1.25rem]">
+        <div className="relative max-w-[62rem] z-4 mx-auto text-center mb-1 md:mb-10 lg:mb-[1.25rem]">
           <h1 className="h1 mb-6 text-white">
             Predict Performance. <br /> Gain the Edge. <br />
             <span className="relative inline-block mt-2">
@@ -42,10 +42,10 @@ const Hero = () => {
             </span>
 
           </h1>
-          <p className="body-1 max-w-3xl mx-auto mb-6 text-color-1 lg:mb-8">
+          <p className="body-1 max-w-3xl mx-auto mb-6 z-4 text-color-1 lg:mb-8">
             Unlock the future of sports analytics with AI-powered projections. VantageForm lets you simulate player performance using advanced models and real data.
           </p>
-          <Button href="/pricing" white className={"z-1"} onClick={undefined} px={undefined}>
+          <Button href="#hero" white className={"z-3"} onClick={undefined} px={undefined}>
             Get started
           </Button>
         </div>

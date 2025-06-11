@@ -20,8 +20,6 @@ const Button = ({ className, href, onClick, children, px, white }) => {
     </a>
   );
 
-  console.log("Final button classes:", classes);
-
   return href ? renderLink() : renderButton();
 };
 
