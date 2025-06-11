@@ -14,7 +14,7 @@ const Footer = () => {
         id="footer"
         >
       <div className="container flex sm:justify-between justify-center items-center gap-10 max-sm:flex-col">
-        <p className="caption text-n-4 lg:block">
+        <p className="caption text-color-1 lg:block">
           © {new Date().getFullYear()}. All rights reserved.
         </p>
 
@@ -25,7 +25,7 @@ const Footer = () => {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center w-10 h-10 bg-n-7 rounded-full transition-colors hover:bg-n-6"
+                className="flex items-center justify-center w-10 h-10 bg-n-1 rounded-full transition-colors hover:bg-color-1"
               >
                 <Image
                   src={item.iconUrl}

@@ -61,7 +61,7 @@ export default function Scene() {
   // ========== ANIMATION PARAMETERS - CUSTOMIZE THESE ==========
   
   // Scroll & Rotation Control
-  const SCROLL_DISTANCE_FOR_FULL_ROTATION = isMobile ? 400 : 600 // Faster on mobile
+  const SCROLL_DISTANCE_FOR_FULL_ROTATION = isMobile ? 600 : 900 // Faster on mobile
   const NUMBER_OF_ROTATIONS = 1 // how many full rotations (1 = 360°, 2 = 720°, etc.)
   
   // Trigger Zone Control
@@ -74,7 +74,7 @@ export default function Scene() {
   
   // Animation Feel
   const ENABLE_EASING = true // smooth animation vs linear
-  const ROTATION_DIRECTION = 1 // 1 for normal, -1 for reverse
+  let ROTATION_DIRECTION = 1 // 1 for normal, -1 for reverse
   
   // Visual Feedback
   const SHOW_PROGRESS_INDICATOR = true // show progress bar during animation
@@ -125,6 +125,7 @@ export default function Scene() {
           isAnimatingRef.current = false
           animationCooldownRef.current = true // Start cooldown period
           accumulatedScrollRef.current = 0
+          ROTATION_DIRECTION *= -1
           
           // Allow one final scroll to exit the animation zone
           setTimeout(() => {
