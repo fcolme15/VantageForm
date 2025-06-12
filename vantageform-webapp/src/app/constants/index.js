@@ -1,7 +1,4 @@
-import yourlogo from "@/assets/yourlogo.svg"
-import file02 from "@/assets/file-02.svg";
-import searchMd from "@/assets/search-md.svg";
-import plusSquare from "@/assets/plus-square.svg";
+
 
 import discordIcon from "@/assets/socials/discord.svg";
 import XIcon from "@/assets/socials/twitter.svg";
@@ -45,9 +42,6 @@ export const navigation = [
   ];
 
 
-export const heroIcons = [file02, searchMd, plusSquare];
-
-export const companyLogos = [yourlogo, yourlogo, yourlogo, yourlogo, yourlogo];
 
 export const socials = [
   {
