@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 
 const PricingList = () => {
   return (
-    <div className="flex gap-[1rem] max-lg:flex-wrap items-stretch">
+    <div className="flex gap-[1rem] max-lg:flex-wrap items-stretch max-lg:justify-center">
       {pricing.map((item) => (
         <div
           key={item.id}

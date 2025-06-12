@@ -123,7 +123,7 @@ function About() {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button href="#hero" white className={"shadow-lg "} onClick={undefined} px={undefined} >
+              <Button href="/dashboard" white className={"shadow-lg "} onClick={undefined} px={undefined} >
                 Explore Predictions
               </Button>
             </div>

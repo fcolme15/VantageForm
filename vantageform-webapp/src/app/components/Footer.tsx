@@ -6,7 +6,7 @@ import { socials } from "../constants";
 const Footer = () => {
   return (
     <Section
-      className="!px-0 !py-10 bg-n-7"
+      className="!px-0 !py-4 bg-n-8"
       crossesOffset="lg:translate-y-[5.25rem]"
       customPaddings
       id="footer"

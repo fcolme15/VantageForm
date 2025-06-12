@@ -42,10 +42,10 @@ const Hero = () => {
             </span>
 
           </h1>
-          <p className="body-1 max-w-3xl mx-auto mb-6 z-4 text-color-1 lg:mb-8">
+          <p className="body-1 max-w-3xl mx-auto mb-6 z-4 text-white lg:mb-8">
             Unlock the future of sports analytics with AI-powered projections. VantageForm lets you simulate player performance using advanced models and real data.
           </p>
-          <Button href="#hero" white className={"z-3"} onClick={undefined} px={undefined}>
+          <Button href="/dashboard" white className={"z-3"} onClick={undefined} px={undefined}>
             Get started
           </Button>
         </div>
