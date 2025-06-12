@@ -35,7 +35,7 @@ const Services = () => {
               src={statsBackground}
               alt="Analytics Background"
               fill
-              className="object-cover opacity-[.8]"
+              className="object-cover opacity-[.5]"
               priority
             />
             {/* Background Overlay */}
