@@ -11,38 +11,38 @@ export const navigation = [
     {
       id: "0",
       title: "Home",
-      url: "#hero",
+      url: "/",
     },
     {
       id: "1",
       title: "Dashboard",
-      url: "#dashboard",
+      url: "/dashboard",
     },
     {
       id: "2",
       title: "About",
-      url: "#about",
+      url: "/#about",
     },
     {
       id: "3",
       title: "Features",
-      url: "#features",
+      url: "/#features",
     },
     {
       id: "4",
       title: "Pricing",
-      url: "#pricing",
+      url: "/#pricing",
     },
     {
       id: "5",
       title: "New account",
-      url: "#signup",
+      url: "/#signup",
       onlyMobile: true,
     },
     {
       id: "6",
       title: "Sign in",
-      url: "#login",
+      url: "/#login",
       onlyMobile: true,
     },
   ];
