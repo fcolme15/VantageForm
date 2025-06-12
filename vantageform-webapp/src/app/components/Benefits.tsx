@@ -6,7 +6,7 @@ const Benefits = () => {
 
   return (
     <Section
-      className="bg-n-8 py-20 px-4 overflow-hidden min-h-screen"
+      className="bg-gradient-to-b from-n-7 to-n-8 py-20 px-4 overflow-hidden min-h-screen"
       crosses
       crossesOffset="lg:translate-y-[5.25rem]"
       customPaddings

@@ -6,7 +6,6 @@ import MenuSvg from "@/assets/svg/MenuSvg";
 import { HamburgerMenu } from "@/components/design/Header";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 const Header = () => {
   const pathname = usePathname();

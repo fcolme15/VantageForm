@@ -25,17 +25,22 @@ export const navigation = [
     },
     {
       id: "3",
-      title: "Roadmap",
-      url: "#roadmap",
+      title: "Features",
+      url: "#features",
     },
     {
       id: "4",
+      title: "Pricing",
+      url: "#pricing",
+    },
+    {
+      id: "5",
       title: "New account",
       url: "#signup",
       onlyMobile: true,
     },
     {
-      id: "5",
+      id: "6",
       title: "Sign in",
       url: "#login",
       onlyMobile: true,
@@ -79,38 +84,44 @@ export const socials = [
 
 
 
+
 export const pricing = [
   {
     id: "0",
     title: "Basic",
-    description: "AI chatbot, personalized recommendations",
-    price: "0",
+    description: "Explore predictions and player insights with limited access.",
+    price: "Free",
     features: [
-      "An AI chatbot that can understand your queries",
-      "Personalized recommendations based on your preferences",
-      "Ability to explore the app and its features without any cost",
+      "Access to AI-powered player predictions",
+      "Limited number of daily searches",
+      "Basic player comparison tools",
+      "Save a small number of favorite profiles",
     ],
   },
   {
     id: "1",
     title: "Premium",
-    description: "Advanced AI chatbot, priority support, analytics dashboard",
+    description: "Unlock more predictions, comparisons, and saved profiles.",
     price: "9.99",
     features: [
-      "An advanced AI chatbot that can understand complex queries",
-      "An analytics dashboard to track your conversations",
-      "Priority support to solve issues quickly",
+      "All Basic features included",
+      "Increased daily searches",
+      "Expanded player comparison tools",
+      "Save more profiles and search history",
+      "Priority access to new features",
     ],
   },
   {
     id: "2",
     title: "Enterprise",
-    description: "Custom AI chatbot, advanced analytics, dedicated account",
+    description: "Built for professionals with high-volume access and direct collaboration.",
     price: null,
     features: [
-      "An AI chatbot that can understand your queries",
-      "Personalized recommendations based on your preferences",
-      "Ability to explore the app and its features without any cost",
+      "All Premium features included",
+      "High-volume prediction access",
+      "Unlimited saved profiles and comparisons",
+      "API access (coming soon)",
+      "Direct communication with the VantageForm team",
     ],
   },
 ];

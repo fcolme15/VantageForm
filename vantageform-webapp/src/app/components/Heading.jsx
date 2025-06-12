@@ -1,4 +1,4 @@
-import TagLine from "./Tagline";
+import TagLine from "@/components/Tagline";
 
 const Heading = ({ className, title, text, tag }) => {
   return (

@@ -10,7 +10,7 @@ import SoccerFormation433 from '@/assets/svg/SoccerFormation433'
 const Services = () => {
   return (
     <Section
-      className="bg-n-8 py-24 relative overflow-hidden"
+      className="bg-gradient-to-b from-n-8 to-n-7 py-24 relative overflow-hidden"
       crosses
       crossesOffset="lg:translate-y-[5.25rem]"
       customPaddings
