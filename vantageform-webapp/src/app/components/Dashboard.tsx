@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Search, TrendingUp, Users, Star, Plus, BarChart3, Activity, X } from 'lucide-react';
+import { ChevronDown, Search, TrendingUp, Users, Star, Plus, BarChart3, Activity, X, Zap } from 'lucide-react';
 
 // Type definitions
 interface Sport {
@@ -67,7 +67,9 @@ const RECENT_PLAYERS: Player[] = [
   { id: 1, name: 'Josh Allen', team: 'BUF', position: 'QB', sport: 'nfl' },
   { id: 2, name: 'Cooper Kupp', team: 'LAR', position: 'WR', sport: 'nfl' },
   { id: 3, name: 'Travis Kelce', team: 'KC', position: 'TE', sport: 'nfl' },
-  { id: 4, name: 'Tyreek Hill', team: 'MIA', position: 'WR', sport: 'nfl' }
+  { id: 4, name: 'Tyreek Hill', team: 'MIA', position: 'WR', sport: 'nfl' },
+  { id: 5, name: 'Lamar Jackson', team: 'BAL', position: 'QB', sport: 'nfl' },
+  { id: 6, name: 'Davante Adams', team: 'LV', position: 'WR', sport: 'nfl' }
 ];
 
 const PROJECTION_TYPES: ProjectionType[] = [
@@ -81,13 +83,18 @@ const PROJECTION_TYPES: ProjectionType[] = [
 const SAVED_PROJECTIONS: SavedProjection[] = [
   { id: 1, player: 'Josh Allen', projection: 'Passing Yards', value: '287.5', date: '2025-06-12' },
   { id: 2, player: 'Cooper Kupp', projection: 'Receptions', value: '8.5', date: '2025-06-11' },
-  { id: 3, player: 'Travis Kelce', projection: 'Receiving Yards', value: '76.5', date: '2025-06-11' }
+  { id: 3, player: 'Travis Kelce', projection: 'Receiving Yards', value: '76.5', date: '2025-06-11' },
+  { id: 4, player: 'Tyreek Hill', projection: 'Receiving Yards', value: '82.3', date: '2025-06-10' },
+  { id: 5, player: 'Lamar Jackson', projection: 'Rushing Yards', value: '65.2', date: '2025-06-10' },
+  { id: 6, player: 'Davante Adams', projection: 'Receptions', value: '7.8', date: '2025-06-09' }
 ];
 
 const LINEUPS: Lineup[] = [
   { id: 1, name: 'Week 18 Lineup', players: 6, projections: 8, created: '2025-06-12' },
   { id: 2, name: 'TNF Special', players: 4, projections: 6, created: '2025-06-11' },
-  { id: 3, name: 'Sunday Slate', players: 8, projections: 12, created: '2025-06-10' }
+  { id: 3, name: 'Sunday Slate', players: 8, projections: 12, created: '2025-06-10' },
+  { id: 4, name: 'MNF Showdown', players: 5, projections: 7, created: '2025-06-09' },
+  { id: 5, name: 'GPP Tournament', players: 9, projections: 15, created: '2025-06-08' }
 ];
 
 // Component interfaces
@@ -168,14 +175,14 @@ interface PlayerCardProps {
 const PlayerCard: React.FC<PlayerCardProps> = ({ player, isActive, onClick }) => (
   <button
     onClick={() => onClick(player)}
-    className={`p-3 rounded-lg border transition-all hover:scale-105 ${
+    className={`p-3 lg:min-h-10 lg:min-w-60 lg:max-h-10 lg:max-w-60 rounded-lg border transition-all hover:bg-green-600/20 z-20 ${
       isActive 
         ? 'bg-green-600/30 border-green-500 text-green-400' 
         : 'bg-[#0B1901]/50 border-green-800 text-white hover:bg-[#0B1901]/70'
     }`}
   >
-    <div className="text-sm font-medium">{player.name}</div>
-    <div className="text-xs opacity-75">{player.team} • {player.position}</div>
+    <div className="inline-block text-sm font-medium z-20">{player.name} • </div>
+    <div className="inline-block text-xs opacity-75 z-20"> &nbsp;{player.team} • {player.position}</div>
   </button>
 );
 
@@ -236,6 +243,54 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ data, type }) => {
   );
 };
 
+interface ComparisonPlayerCardProps {
+  player: Player | null;
+  title: string;
+  onClick: () => void;
+}
+
+const ComparisonPlayerCard: React.FC<ComparisonPlayerCardProps> = ({ player, title, onClick }) => (
+  <div className="bg-[#0B1901]/50 rounded-lg p-4 border border-green-800">
+    <h4 className="text-sm font-medium text-gray-300 mb-3">{title}</h4>
+    {player ? (
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-sm font-bold">
+            {player.name.split(' ').map(n => n[0]).join('')}
+          </div>
+          <div>
+            <div className="font-medium text-white">{player.name}</div>
+            <div className="text-xs text-gray-300">{player.team} • {player.position}</div>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="bg-[#0B1901]/70 rounded p-2 text-center">
+            <div className="text-green-400 font-bold">8.7</div>
+            <div className="text-gray-400">Proj</div>
+          </div>
+          <div className="bg-[#0B1901]/70 rounded p-2 text-center">
+            <div className="text-blue-400 font-bold">7.2</div>
+            <div className="text-gray-400">Avg</div>
+          </div>
+        </div>
+        <button
+          onClick={onClick}
+          className="w-full text-xs text-green-400 hover:text-green-300 transition-colors"
+        >
+          Change Player
+        </button>
+      </div>
+    ) : (
+      <button
+        onClick={onClick}
+        className="w-full h-24 border border-dashed border-green-800 rounded-lg flex items-center justify-center text-gray-400 hover:text-green-400 hover:border-green-600 transition-all"
+      >
+        <Plus className="w-6 h-6" />
+      </button>
+    )}
+  </div>
+);
+
 interface SaveModal {
   isOpen: boolean;
   onClose: () => void;
@@ -291,6 +346,8 @@ export default function SportsDashboard() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [scrollY, setScrollY] = useState<number>(0);
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [comparisonPlayer1, setComparisonPlayer1] = useState<Player | null>(RECENT_PLAYERS[1]);
+  const [comparisonPlayer2, setComparisonPlayer2] = useState<Player | null>(RECENT_PLAYERS[2]);
 
   const handleSaveProjection = (player: Player, projection: ProjectionType) => {
     setSelectedPlayer(player);
@@ -314,19 +371,19 @@ export default function SportsDashboard() {
 
   return (
     <div className="mt-21 min-h-screen bg-gradient-to-br from-n-8 to-n-7 text-white relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Background Elements */}
       <div className="absolute inset-0 opacity-10">
+        {/* Top Left */}
         <div 
-          className="absolute top-20 left-20 w-96 h-96 bg-green-500 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
+          className="absolute top-30 left-20 w-96 h-96 bg-green-500 rounded-full blur-3xl"
         />
+        {/* Top Right */}
         <div 
-          className="absolute bottom-20 right-20 w-80 h-80 bg-emerald-400 rounded-full blur-3xl"
-          style={{ transform: `translateY(${-scrollY * 0.15}px)` }}
+          className="absolute top-10 left-250 w-96 h-96 bg-green-500 rounded-full blur-3xl"
         />
+        {/* Lower Middle */}
         <div 
           className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-600 rounded-full blur-2xl"
-          style={{ transform: `translate(-50%, -50%) translateY(${scrollY * 0.1}px)` }}
         />
       </div>
 
@@ -344,7 +401,7 @@ export default function SportsDashboard() {
         {/* Control Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Sport Selection */}
-          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">
+          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50 z-30">
             <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
               <Activity className="w-4 h-4" />
               Select Sport
@@ -358,7 +415,7 @@ export default function SportsDashboard() {
           </div>
 
           {/* ML Model Selection */}
-          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">
+          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50 z-20">
             <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               ML Model
@@ -377,7 +434,7 @@ export default function SportsDashboard() {
               <Users className="w-4 h-4" />
               Recent Players
             </label>
-            <div className="space-y-2 max-h-32 overflow-y-auto">
+            <div className="space-y-2  lg:min-h-32 max-h-32 scrollbar-hide overflow-y-auto">
               {RECENT_PLAYERS.slice(0, 3).map((player) => (
                 <PlayerCard
                   key={player.id}
@@ -402,53 +459,23 @@ export default function SportsDashboard() {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Top Content - Player Analysis + Saved Projections */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Player Analysis - 2/3 width */}
           <div className="lg:col-span-2">
-            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50">
+            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-[550px] lg:h-[560px] flex flex-col">
               {selectedPlayer ? (
                 <>
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-2xl font-bold">
-                      {selectedPlayer.name.split(' ').map(n => n[0]).join('')}
+                  <div className="flex items-center justify-between mb-6 flex-shrink-0">
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-2xl font-bold">
+                        {selectedPlayer.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-white">{selectedPlayer.name}</h2>
+                        <p className="text-gray-300">{selectedPlayer.team} • {selectedPlayer.position} • Age 28</p>
+                      </div>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-white">{selectedPlayer.name}</h2>
-                      <p className="text-gray-300">{selectedPlayer.team} • {selectedPlayer.position} • Age 28</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Projection Type
-                    </label>
-                    <Dropdown
-                      options={PROJECTION_TYPES}
-                      selected={selectedProjection}
-                      onSelect={(option) => setSelectedProjection(option as ProjectionType)}
-                      placeholder="Select projection..."
-                      className="max-w-xs"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-green-400">8.7</div>
-                      <div className="text-sm text-gray-300">Projected</div>
-                    </div>
-                    <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-blue-400">7.2</div>
-                      <div className="text-sm text-gray-300">Season Avg</div>
-                    </div>
-                    <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                      <div className="text-2xl font-bold text-purple-400">94%</div>
-                      <div className="text-sm text-gray-300">Confidence</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div />
                     <button
                       onClick={() => setShowSaveModal(true)}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
@@ -458,7 +485,39 @@ export default function SportsDashboard() {
                     </button>
                   </div>
 
-                  <ProjectionChart data={[]} type={selectedProjection} />
+                  <div className="flex-1 overflow-y-auto">
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Projection Type
+                      </label>
+                      <Dropdown
+                        options={PROJECTION_TYPES}
+                        selected={selectedProjection}
+                        onSelect={(option) => setSelectedProjection(option as ProjectionType)}
+                        placeholder="Select projection..."
+                        className="max-w-xs"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-green-400">8.7</div>
+                        <div className="text-sm text-gray-300">Projected</div>
+                      </div>
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-blue-400">7.2</div>
+                        <div className="text-sm text-gray-300">Season Avg</div>
+                      </div>
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-purple-400">94%</div>
+                        <div className="text-sm text-gray-300">Confidence</div>
+                      </div>
+                    </div>
+
+                    <div className="min-h-[200px]">
+                      <ProjectionChart data={[]} type={selectedProjection} />
+                    </div>
+                  </div>
                 </>
               ) : (
                 <div className="text-center py-12">
@@ -469,62 +528,130 @@ export default function SportsDashboard() {
             </div>
           </div>
 
-          {/* Sidebar - 1/3 width */}
-          <div className="space-y-6">
-            {/* Saved Projections */}
-            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <Star className="w-5 h-5 text-yellow-400" />
-                  Saved Projections
-                </h3>
-              </div>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {SAVED_PROJECTIONS.map((proj) => (
-                  <button
-                    key={proj.id}
-                    onClick={() => {
-                      const player = RECENT_PLAYERS.find(p => p.name === proj.player);
-                      const projection = PROJECTION_TYPES.find(p => p.name === proj.projection);
-                      if (player && projection) {
-                        handleSaveProjection(player, projection);
-                      }
-                    }}
-                    className="w-full bg-[#0B1901]/50 hover:bg-green-800/30 rounded-lg p-3 text-left transition-all"
-                  >
-                    <div className="font-medium text-white text-sm">{proj.player}</div>
-                    <div className="text-xs text-gray-300">{proj.projection}</div>
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-green-400 font-bold">{proj.value}</span>
-                      <span className="text-xs text-gray-400">{proj.date}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+          {/* Saved Projections - 1/3 width, full height */}
+          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-80 lg:h-[560px]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-400" />
+                Saved Projections
+              </h3>
             </div>
-
-            {/* Lineup Builder */}
-            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                  <Users className="w-5 h-5 text-green-400" />
-                  Saved Lineups
-                </h3>
-              </div>
-              <div className="space-y-3 max-h-64 overflow-y-auto">
-                {LINEUPS.map((lineup) => (
-                  <div key={lineup.id} className="bg-[#0B1901]/50 rounded-lg p-3">
-                    <div className="font-medium text-white text-sm">{lineup.name}</div>
-                    <div className="text-xs text-gray-300 mt-1">
-                      {lineup.players} players • {lineup.projections} projections
-                    </div>
-                    <div className="text-xs text-gray-400 mt-1">{lineup.created}</div>
+            <div className="space-y-3 max-h-[calc(100%-4rem)] scrollbar-hide overflow-y-auto">
+              {SAVED_PROJECTIONS.map((proj) => (
+                <button
+                  key={proj.id}
+                  onClick={() => {
+                    const player = RECENT_PLAYERS.find(p => p.name === proj.player);
+                    const projection = PROJECTION_TYPES.find(p => p.name === proj.projection);
+                    if (player && projection) {
+                      handleSaveProjection(player, projection);
+                    }
+                  }}
+                  className="w-full bg-[#0B1901]/50 hover:bg-green-800/30 rounded-lg p-3 text-left transition-all"
+                >
+                  <div className="font-medium text-white text-sm">{proj.player}</div>
+                  <div className="text-xs text-gray-300">{proj.projection}</div>
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-green-400 font-bold">{proj.value}</span>
+                    <span className="text-xs text-gray-400">{proj.date}</span>
                   </div>
-                ))}
-              </div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
+
+        {/* Bottom Content - 2x2 Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Player Comparison - 2/3 width */}
+          <div className="lg:col-span-2">
+            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-[550px] lg:h-[560px] flex flex-col">
+              <div className="flex items-center justify-between mb-6 flex-shrink-0">
+                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                  <Zap className="w-6 h-6 text-yellow-400" />
+                  Player Comparison
+                </h3>
+                <div className="flex items-center gap-2 text-green-400">
+                  <BarChart3 className="w-4 h-4" />
+                  <span className="text-sm">Head-to-Head</span>
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <ComparisonPlayerCard
+                    player={comparisonPlayer1}
+                    title="Player A"
+                    onClick={() => {
+                      // In a real app, this would open a player selection modal
+                      const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);
+                      if (nextPlayer) setComparisonPlayer1(nextPlayer);
+                    }}
+                  />
+                  <ComparisonPlayerCard
+                    player={comparisonPlayer2}
+                    title="Player B"
+                    onClick={() => {
+                      // In a real app, this would open a player selection modal
+                      const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);
+                      if (nextPlayer) setComparisonPlayer2(nextPlayer);
+                    }}
+                  />
+                </div>
+
+                {comparisonPlayer1 && comparisonPlayer2 && (
+                  <div className="pt-6 border-t border-green-800/50">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-lg font-bold text-green-400 mb-1">Advantage</div>
+                        <div className="text-sm text-white">{comparisonPlayer1.name}</div>
+                        <div className="text-xs text-gray-300">Better matchup</div>
+                      </div>
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-lg font-bold text-blue-400 mb-1">Similar</div>
+                        <div className="text-sm text-white">Target Share</div>
+                        <div className="text-xs text-gray-300">Both ~22%</div>
+                      </div>
+                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
+                        <div className="text-lg font-bold text-purple-400 mb-1">Edge</div>
+                        <div className="text-sm text-white">{comparisonPlayer2.name}</div>
+                        <div className="text-xs text-gray-300">Lower salary</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Saved Lineups - 1/3 width */}
+          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-80 lg:h-[560px]">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-green-400" />
+                Saved Lineups
+              </h3>
+            </div>
+            <div className="space-y-3 max-h-[calc(100%-4rem)] scrollbar-hide overflow-y-auto">
+              {LINEUPS.map((lineup) => (
+                <div key={lineup.id} className="bg-[#0B1901]/50 hover:bg-green-800/20 rounded-lg p-3 transition-all cursor-pointer">
+                  <div className="font-medium text-white text-sm">{lineup.name}</div>
+                  <div className="text-xs text-gray-300 mt-1">
+                    {lineup.players} players • {lineup.projections} projections
+                  </div>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-xs text-gray-400">{lineup.created}</span>
+                    <div className="flex items-center gap-1">
+                      <Star className="w-3 h-3 text-yellow-400" />
+                      <span className="text-xs text-yellow-400">Saved</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* HERE */}
 
         <SaveModal
           isOpen={showSaveModal}
