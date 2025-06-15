@@ -181,7 +181,7 @@ const Services = () => {
                     Dive deeper into performance.
                   </p>
                   <p className="text-neutral-300 text-lg mb-6">
-                    Track a player's development over time with breakdowns of key stats, performance trends, and contextual comparisons.
+                    Track a player&apos;s development over time with breakdowns of key stats, performance trends, and contextual comparisons.
                   </p>
                 </div>
 

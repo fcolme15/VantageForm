@@ -1,9 +1,7 @@
 
 
-import discordIcon from "@/assets/socials/discord.svg";
 import XIcon from "@/assets/socials/twitter.svg";
 import instagramIcon from "@/assets/socials/instagram.svg";
-import telegramIcon from "@/assets/socials/telegram.svg";
 import facebookIcon from "@/assets/socials/facebook.svg";
 import { BarChart3, TrendingUp, Zap } from 'lucide-react';
 

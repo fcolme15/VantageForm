@@ -6,7 +6,7 @@ interface ProjectionChartProps {
     type: ProjectionType;
 }
   
-const ProjectionChart: React.FC<ProjectionChartProps> = ({ data, type }) => {
+const ProjectionChart: React.FC<ProjectionChartProps> = ({ }) => {
   const chartData = [65, 78, 82, 75, 90, 85, 92];
   const maxValue = Math.max(...chartData);
   

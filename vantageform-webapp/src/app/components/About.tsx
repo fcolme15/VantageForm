@@ -113,12 +113,12 @@ function About() {
                     <div className="w-6 h-6 bg-white/20 rounded-full" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">Real-time Analysis</h3>
-                  <p className="text-n-3 text-sm">Uses latest data processed on request through our API's.</p>
+                  <p className="text-n-3 text-sm">Uses latest data processed on request through our API&apos;s.</p>
                 </div>
               </div>
               
               <p className="text-n-3">
-                Created by passionate sports enthusiast and software engineer, VantageForm bridges the gap between complex data science and accessible sports insights. Whether you're a fantasy player, analyst, or simply curious about the future of sports, our platform provides the vantage view you need.
+                Created by passionate sports enthusiast and software engineer, VantageForm bridges the gap between complex data science and accessible sports insights. Whether you&apos;re a fantasy player, analyst, or simply curious about the future of sports, our platform provides the vantage view you need.
               </p>
             </div>
             

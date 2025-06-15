@@ -1,4 +1,4 @@
-import Head from "next/head";
+
 import Header from "./components/Header";
 import ButtonGradient from "./assets/svg/ButtonGradient";
 import Hero from "./components/Hero";
@@ -22,3 +22,10 @@ export default function Home() {
     </div>
   );
 }
+
+export const metadata = {
+  title: "VantageForm",
+  icons: {
+    icon: '/favicon.png',
+  },
+};
