@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Users, Star, Plus, BarChart3, Activity, Zap } from 'lucide-react';
 import Dropdown from '@/components/dashboard/Dropdown';
 import PlayerCard from '@/components/dashboard/PlayerCard';
