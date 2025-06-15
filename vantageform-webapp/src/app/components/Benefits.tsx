@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { benefits } from "../constants";
 import Section from '@/components/Section';

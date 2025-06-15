@@ -72,7 +72,7 @@ function About() {
               <ScrollParallax strength={0.3}>
                 <div className="bg-n-6 border border-n-5 rounded-lg p-3 shadow-lg">
                   <div className="text-xs text-n-3 mb-1">Models Trained</div>
-                  <div className="text-lg font-bold text-blue-400">12k+</div>
+                  <div className="text-lg font-bold text-blue-400">100+</div>
                 </div>
               </ScrollParallax>
             </div>
@@ -105,7 +105,7 @@ function About() {
                     <div className="w-6 h-6 bg-white/20 rounded" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">Deep Learning Models</h3>
-                  <p className="text-n-3 text-sm">Neural networks trained on millions of historical data points for maximum accuracy.</p>
+                  <p className="text-n-3 text-sm">Neural networks trained on thousands of historical data points for maximum accuracy.</p>
                 </div>
                 
                 <div className="bg-n-7 border border-n-6 rounded-xl p-6 hover:border-green-500/50 transition-colors">
@@ -113,12 +113,12 @@ function About() {
                     <div className="w-6 h-6 bg-white/20 rounded-full" />
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">Real-time Analysis</h3>
-                  <p className="text-n-3 text-sm">Live data processing and instant predictions as games unfold.</p>
+                  <p className="text-n-3 text-sm">Uses latest data processed on request through our API's.</p>
                 </div>
               </div>
               
               <p className="text-n-3">
-                Created by passionate sports enthusiasts and AI researchers, VantageForm bridges the gap between complex data science and accessible sports insights. Whether you're a fantasy player, analyst, or simply curious about the future of sports, our platform provides the edge you need.
+                Created by passionate sports enthusiast and software engineer, VantageForm bridges the gap between complex data science and accessible sports insights. Whether you're a fantasy player, analyst, or simply curious about the future of sports, our platform provides the vantage view you need.
               </p>
             </div>
             

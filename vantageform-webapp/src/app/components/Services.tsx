@@ -118,7 +118,7 @@ const Services = () => {
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <div>
-                    <span className="text-white font-semibold">200+ Metrics Analyzed Per Player</span>
+                    <span className="text-white font-semibold">Several Metrics Analyzed Per Player</span>
                   </div>
                 </li>
                 <li className="flex items-start py-3 border-t border-neutral-600">
@@ -139,7 +139,7 @@ const Services = () => {
                   <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-white text-sm font-semibold">Processing live data...</span>
                 </div>
-                <div className="text-neutral-300 text-sm italic">Trained on 12,000+ player profiles and 10M+ data points.</div>
+                <div className="text-neutral-300 text-sm italic">Trained on 100+ player profiles and 1000+ data points.</div>
               </div>
             </div>
           </div>
@@ -192,7 +192,7 @@ const Services = () => {
                     <div className="text-neutral-400 text-sm">Metrics Tracked</div>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-white">50K+</div>
+                    <div className="text-2xl font-bold text-white">100+</div>
                     <div className="text-neutral-400 text-sm">Player Profiles</div>
                   </div>
                 </div>
