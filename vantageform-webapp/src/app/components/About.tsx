@@ -1,8 +1,7 @@
 'use client'
-import React from 'react'
+import React from 'react';
 import Section from "@/components/Section";
-import OrbitBalls from '@/assets/svg/OrbitBalls'
-import barChart from "@/assets/StatsBarChart.png"
+import barChart from "@/assets/StatsBarChart.png";
 import { ScrollParallax } from "react-just-parallax";
 import Image from 'next/image';
 import Button from './Button';

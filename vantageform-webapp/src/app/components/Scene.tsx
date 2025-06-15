@@ -76,8 +76,6 @@ export default function Scene() {
   const ENABLE_EASING = true // smooth animation vs linear
   let ROTATION_DIRECTION = 1 // 1 for normal, -1 for reverse
   
-  // Visual Feedback
-  const SHOW_PROGRESS_INDICATOR = true // show progress bar during animation
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {

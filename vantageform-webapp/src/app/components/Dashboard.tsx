@@ -1,14 +1,14 @@
 "use client"
 
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, Search, TrendingUp, Users, Star, Plus, BarChart3, Activity, X, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, Star, Plus, BarChart3, Activity, Zap } from 'lucide-react';
 import Dropdown from '@/components/dashboard/Dropdown';
 import PlayerCard from '@/components/dashboard/PlayerCard';
 import SearchBar from '@/components/dashboard/SearchBar';
 import ProjectionChart from '@/components/dashboard/ProjectionChart';
 import ComparisonPlayerCard from './dashboard/PlayerComparisonCard';
 import SaveModel from "@/components/dashboard/SaveModel";
-import {Sport, MLModel, Player, ProjectionType, SavedProjection, Lineup} from "@/components/dashboard/Interfaces"
+import {Sport, MLModel, Player, ProjectionType} from "@/components/dashboard/Interfaces"
 import { SPORTS_DATA, ML_MODELS, RECENT_PLAYERS, PROJECTION_TYPES, SAVED_PROJECTIONS, LINEUPS } from "@/constants/tempDashData"
 
 export default function SportsDashboard() {
