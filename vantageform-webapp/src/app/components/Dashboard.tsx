@@ -26,7 +26,7 @@ export default function Dashboard() {
     setSelectedPlayer(player);
     setSelectedProjection(projection);
   };
-
+ 
   const handleSave = (type: 'projection' | 'lineup') => {
     // Here you would make API calls to save the data
     console.log(`Saving as ${type}:`, {
