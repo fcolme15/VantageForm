@@ -8,7 +8,7 @@ import { LeftLine, RightLine } from '@/components/design/Pricing';
 const Pricing = () => {
   return (
     <Section
-      className="bg-gradient-to-b from-n-8 to-n-7 overflow-hidden max-lg:justify-center"
+      className="bg-gradient-to-b from-n-8 to-n-7 overflow-hidden max-lg:justify-center scroll-mt-28"
       crosses
       crossesOffset="lg:translate-y-[1rem]"
       customPaddings

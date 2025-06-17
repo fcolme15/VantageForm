@@ -10,7 +10,7 @@ function About() {
 
   return (
     <Section
-      className="bg-gradient-to-b from-n-7 to-n-8 relative overflow-hidden"
+      className="bg-gradient-to-b from-n-7 to-n-8 relative overflow-hidden scroll-mt-20"
       crosses
       crossesOffset="lg:translate-y-[5.25rem]"
       customPaddings
