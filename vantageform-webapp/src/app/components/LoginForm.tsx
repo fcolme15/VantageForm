@@ -161,7 +161,7 @@ export default function AuthForm() {
             </form>
 
             <div className="text-center mt-6">
-              <p className="text-white/70 mb-2">Don't have an account?</p>
+              <p className="text-white/70 mb-2">Don&apos;t have an account?</p>
               <button
                 onClick={toggleMode}
                 className="text-blue-400 hover:text-blue-300 font-semibold transition-colors"
