@@ -5,45 +5,79 @@ import instagramIcon from "@/assets/socials/instagram.svg";
 import facebookIcon from "@/assets/socials/facebook.svg";
 import { BarChart3, TrendingUp, Zap } from 'lucide-react';
 
-export const navigation = [
-    {
-      id: "0",
-      title: "Home",
-      url: "/",
-    },
-    {
-      id: "1",
-      title: "Dashboard",
-      url: "/dashboard",
-    },
-    {
-      id: "2",
-      title: "About",
-      url: "/#about",
-    },
-    {
-      id: "3",
-      title: "Features",
-      url: "/#features",
-    },
-    {
-      id: "4",
-      title: "Pricing",
-      url: "/#pricing",
-    },
-    {
-      id: "5",
-      title: "New account",
-      url: "/#signup",
-      onlyMobile: true,
-    },
-    {
-      id: "6",
-      title: "Sign in",
-      url: "/#login",
-      onlyMobile: true,
-    },
-  ];
+export const navigation1 = [
+  {
+    id: "0",
+    title: "Home",
+    url: "/",
+  },
+  {
+    id: "1",
+    title: "Dashboard",
+    url: "/dashboard",
+  },
+  {
+    id: "2",
+    title: "About",
+    url: "/#about",
+  },
+  {
+    id: "3",
+    title: "Features",
+    url: "/#features",
+  },
+  {
+    id: "4",
+    title: "Pricing",
+    url: "/#pricing",
+  },
+  {
+    id: "5",
+    title: "New account",
+    url: "/login?mode=signup",
+    onlyMobile: true,
+  },
+  {
+    id: "6",
+    title: "Sign in",
+    url: "/login?mode=login",
+    onlyMobile: true,
+  },
+];
+
+export const navigation2 = [
+  {
+    id: "0",
+    title: "Home",
+    url: "/",
+  },
+  {
+    id: "1",
+    title: "Dashboard",
+    url: "/dashboard",
+  },
+  {
+    id: "2",
+    title: "About",
+    url: "/#about",
+  },
+  {
+    id: "3",
+    title: "Features",
+    url: "/#features",
+  },
+  {
+    id: "4",
+    title: "Pricing",
+    url: "/#pricing",
+  },
+  {
+    id: "5",
+    title: "Sign Out",
+    url: "/",
+    onlyMobile: true,
+  },
+];
 
 
 

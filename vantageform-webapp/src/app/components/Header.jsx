@@ -1,23 +1,32 @@
 "use client";
 import {disablePageScroll, enablePageScroll} from "scroll-lock";
-import {navigation} from "@/constants";
+import {navigation1, navigation2} from "@/constants";
 import Button from "@/components/Button";
 import MenuSvg from "@/assets/svg/MenuSvg";
 import { HamburgerMenu } from "@/components/design/Header";
 import { usePathname } from "next/navigation";
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Header = () => {
   const pathname = usePathname();
   const [openNavigation, setOpenNavigation] = useState(false);
-
   const { user, signOut } = useAuth();
+  const [navigation, setNavigation] = useState(user ? navigation2 : navigation1)
 
   const handleSignOut = async () => {
     await signOut()
   }
+
+  useEffect(() => {
+    if (user){
+      setNavigation(navigation2)
+    }
+    else{
+      setNavigation(navigation1)
+    }
+  },[user])
   
   
   const toggleNavigation = () => {
@@ -31,9 +40,12 @@ const Header = () => {
     }
   };
   
-  const handleClick = () => {
+  const handleClick = (id) => {
     if (!openNavigation ){
       return;
+    }
+    if (id == 5 && user){
+      handleSignOut();
     }
     enablePageScroll();
     setOpenNavigation(false);
@@ -66,7 +78,7 @@ const Header = () => {
             <Link
               key={item.id}
               href={item.url}
-              onClick={handleClick}
+              onClick={() => handleClick(item.id)}
               className={`block relative font-code text-2xl uppercase text-n-1 transition-colors hover:text-color-1 ${
                 item.onlyMobile ? "lg:hidden" : ""
               } px-6 py-6 md:py-8 lg:-mr-0.25 lg:text-base lg:font-semibold ${

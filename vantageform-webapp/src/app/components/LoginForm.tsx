@@ -59,7 +59,7 @@ export default function AuthForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-emerald-900 to-slate-900 p-4">
-      <div className="relative w-full max-w-4xl h-[600px] max-sm:h-screen max-sm:max-w-full bg-white/10 backdrop-blur-lg rounded-3xl max-sm:rounded-none shadow-2xl overflow-hidden border border-white/20">
+      <div className="relative w-full max-w-4xl h-[600px] max-sm:h-[600px] max-sm:max-w-full bg-white/10 backdrop-blur-lg rounded-3xl max-sm:rounded-none shadow-2xl overflow-hidden border border-white/20">
         
         {/* Desktop Layout */}
         <div className="hidden sm:block">
@@ -198,7 +198,7 @@ export default function AuthForm() {
         </div>
 
         {/* Mobile Layout */}
-        <div className="sm:hidden h-full flex flex-col">
+        <div className="sm:hidden flex flex-col mt-12">
           {/* Mobile Header with Toggle */}
           <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-6 text-center text-white">
             <h2 className="text-2xl font-bold mb-4">
@@ -229,7 +229,7 @@ export default function AuthForm() {
           </div>
 
           {/* Mobile Form */}
-          <div className="flex-1 flex items-center justify-center p-6">
+          <div className="flex flex flex-col pt-8 items-center justify-center px-6">
             <div className="w-full max-w-sm">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {error && (

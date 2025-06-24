@@ -7,6 +7,7 @@ import basketBall from "@/assets/basketBall.png";
 import Image from "next/image";
 import React from "react";
 
+
 export const Rings = React.memo(() => {
     return (
         <div className="absolute top-1/2 left-1/2 w-[51.375rem] aspect-square border border-neutral-800/13 rounded-full -translate-x-1/2 -translate-y-1/2">
