@@ -17,7 +17,6 @@ export default function Dashboard() {
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(RECENT_PLAYERS[0]);
   const [selectedProjection, setSelectedProjection] = useState<ProjectionType>(PROJECTION_TYPES[0]);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  // const [scrollY, setScrollY] = useState<number>(0);
   const [showSaveModel, setShowSaveModel] = useState<boolean>(false);
   const [comparisonPlayer1, setComparisonPlayer1] = useState<Player | null>(RECENT_PLAYERS[1]);
   const [comparisonPlayer2, setComparisonPlayer2] = useState<Player | null>(RECENT_PLAYERS[2]);
@@ -35,12 +34,6 @@ export default function Dashboard() {
     });
     setShowSaveModel(false);
   };
-
-  // useEffect(() => {
-  //   const handleScroll = () => setScrollY(window.scrollY);
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
 
   return (
     <div className="mt-21 min-h-screen bg-gradient-to-br from-n-8 to-n-7 text-white relative overflow-hidden">

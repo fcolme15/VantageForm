@@ -4,14 +4,18 @@ import Header from "@/components/Header";
 import ButtonGradient from "@/assets/svg/ButtonGradient";
 import Footer from "@/components/Footer";
 import Dashboard from "@/components/Dashboard";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Home() {
   return (
     <div >
-      <Header />
-      <Dashboard/>
-      <Footer/>
+      <ProtectedRoute>
+        <Header />
+        <Dashboard/>
+        <Footer/>
+      </ProtectedRoute>
       <ButtonGradient />
+      
     </div>
   );
 }

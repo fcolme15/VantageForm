@@ -4,13 +4,21 @@ import {navigation} from "@/constants";
 import Button from "@/components/Button";
 import MenuSvg from "@/assets/svg/MenuSvg";
 import { HamburgerMenu } from "@/components/design/Header";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from 'next/link';
+import { useAuth } from '../../contexts/AuthContext'
+import { useState } from 'react'
 
 const Header = () => {
   const pathname = usePathname();
   const [openNavigation, setOpenNavigation] = useState(false);
+
+  const { user, getAuthHeader, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
+  
   
   const toggleNavigation = () => {
     if (openNavigation){
@@ -73,16 +81,21 @@ const Header = () => {
           <HamburgerMenu />
         </nav>
         
-        <a
-          href="#signup"
-          className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block lg:text-base"
-        >
-          New account
-        </a>
-        
-        <Button className="!hidden lg:!flex lg:!text-base lg:!font-semibold" href="#login">
-          Sign in
-        </Button>
+        {!user && (
+          <Link href='/login?mode=signup' className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block lg:text-base">
+            New Account
+          </Link>
+        )}
+
+        {!user ? (
+          <Button className="!hidden lg:!flex lg:!text-base lg:!font-semibold" href="/login?mode=login">
+            Sign in
+          </Button>
+        ) : (
+          <Button className="!hidden lg:!flex lg:!text-base lg:!font-semibold" onClick={signOut}>
+            Sign out
+          </Button>
+        )}
         
         <Button
           className="ml-auto lg:hidden"

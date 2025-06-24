@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Fira_Code, Sora, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from '../contexts/AuthContext'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -45,7 +46,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${firaCode.variable} ${sora.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+        
       </body>
     </html>
   );
