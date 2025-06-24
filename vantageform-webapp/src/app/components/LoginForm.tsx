@@ -9,7 +9,6 @@ export default function AuthForm() {
   const [confirmPassword, setConfirmPassword] = useState<string>('')
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const [isAnimating, setIsAnimating] = useState(false)
   const { signIn, signUp } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -29,7 +28,7 @@ export default function AuthForm() {
     }
     
     
-    var { error } = isLogin
+    const { error } = isLogin
       ? await signIn(email, password)
       : await signUp(email, password)
     
@@ -82,7 +81,7 @@ export default function AuthForm() {
                       <div className="w-16 h-0.5 bg-white/30 mx-auto"></div>
                     </div>
                     <div className="text-center">
-                      <p className="text-white/90 mb-4">Don't have an account?</p>
+                      <p className="text-white/90 mb-4">Don&apos;t have an account?</p>
                       <button
                         onClick={toggleMode}
                         className="bg-white/20 hover:bg-white/30 text-white px-8 py-3 rounded-xl font-semibold transition-all transform hover:scale-105 backdrop-blur-sm border border-white/30"
