@@ -13,7 +13,6 @@ export default function LoginPage() {
       <Suspense fallback={<AuthLoadingFallback/>}>
         <LoginForm />
       </Suspense>
-      
       <Footer/>
       <ButtonGradient/>
     </div>
