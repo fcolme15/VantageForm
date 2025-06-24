@@ -13,7 +13,7 @@ const Header = () => {
   const pathname = usePathname();
   const [openNavigation, setOpenNavigation] = useState(false);
 
-  const { user, getAuthHeader, signOut } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut()
@@ -82,20 +82,30 @@ const Header = () => {
         </nav>
         
         {!user && (
-          <Link href='/login?mode=signup' className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block lg:text-base">
+          <Link
+            href="/login?mode=signup"
+            className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block lg:text-base"
+          >
             New Account
           </Link>
         )}
 
         {!user ? (
-          <Button className="!hidden lg:!flex lg:!text-base lg:!font-semibold" href="/login?mode=login">
+          <Button
+            className="!hidden lg:!flex lg:!text-base lg:!font-semibold"
+            href="/login?mode=login"
+          >
             Sign in
           </Button>
         ) : (
-          <Button className="!hidden lg:!flex lg:!text-base lg:!font-semibold" onClick={signOut}>
+          <Button
+            className="!hidden lg:!flex lg:!text-base lg:!font-semibold"
+            onClick={handleSignOut}
+          >
             Sign out
           </Button>
         )}
+
         
         <Button
           className="ml-auto lg:hidden"
