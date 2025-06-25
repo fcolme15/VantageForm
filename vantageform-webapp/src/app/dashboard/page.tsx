@@ -5,6 +5,7 @@ import ButtonGradient from "@/assets/svg/ButtonGradient";
 import Footer from "@/components/Footer";
 import Dashboard from "@/components/Dashboard";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ApiTestComponent from  "@/components/profile";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <ProtectedRoute>
         <Header />
         <Dashboard/>
+        <ApiTestComponent/>
         <Footer/>
       </ProtectedRoute>
       <ButtonGradient />

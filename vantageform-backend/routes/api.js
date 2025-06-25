@@ -9,27 +9,16 @@ router.get('/health', (req, res) => {
 });
 
 // Protected routes
-router.get('/profile', authenticateToken, async (req, res) => {
-  try {
-    const result = await databaseService.getUserProfile(req.user.sub);
-    
-    if (result.success) {
-      res.json({
-        message: 'Profile data retrieved successfully',
-        user: result.data
-      });
-    } else {
-      res.status(404).json({
-        error: 'Profile not found',
-        details: result.error
-      });
+router.get('/profile', authenticateToken, (req, res) => {
+  // Return user data from JWT token (no database query needed)
+  res.json({
+    message: 'Profile data retrieved successfully',
+    user: {
+      id: req.user.sub,
+      email: req.user.email,
+      role: req.user.role || 'user'
     }
-  } catch (error) {
-    console.error('Profile route error:', error);
-    res.status(500).json({
-      error: 'Internal server error'
-    });
-  }
+  });
 });
 
 router.get('/dashboard-data', authenticateToken, async (req, res) => {
@@ -181,6 +170,30 @@ router.get('/search/:tableName', authenticateToken, async (req, res) => {
       error: 'Internal server error'
     });
   }
+});
+
+router.get('/table/:tableName', authenticateToken, async (req, res) => {
+    try {
+      const { tableName } = req.params;
+      const { columns } = req.query; // optional: specific columns
+      
+      const result = await databaseService.selectFromTable(tableName, columns);
+      
+      if (result.success) {
+        res.json({
+          message: 'Query completed successfully',
+          data: result.data
+        });
+      } else {
+        res.status(400).json({
+          error: 'Query failed',
+          details: result.error
+        });
+      }
+    } catch (error) {
+      console.error('Table query error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 module.exports = router;

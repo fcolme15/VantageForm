@@ -1,8 +1,21 @@
 const { supabase } = require('../config/database');
 
 class DatabaseService {
+  constructor() {
+    if (!supabase) {
+      console.error('Supabase client not initialized. Check your environment variables.');
+    }
+  }
+
+  _checkConnection() {
+    if (!supabase) {
+      throw new Error('Database connection not available. Check your environment variables.');
+    }
+  }
   // Example: Get user profile
   async getUserProfile(userId) {
+    this._checkConnection();
+    
     try {
       const { data, error } = await supabase
         .from('profiles') // Replace with your table name
@@ -20,6 +33,8 @@ class DatabaseService {
 
   // Example: Create a new record
   async createRecord(tableName, data) {
+    this._checkConnection();
+    
     try {
       const { data: result, error } = await supabase
         .from(tableName)
@@ -37,6 +52,8 @@ class DatabaseService {
 
   // Example: Update a record
   async updateRecord(tableName, id, updates) {
+    this._checkConnection();
+    
     try {
       const { data, error } = await supabase
         .from(tableName)
@@ -55,6 +72,8 @@ class DatabaseService {
 
   // Example: Delete a record
   async deleteRecord(tableName, id) {
+    this._checkConnection();
+    
     try {
       const { error } = await supabase
         .from(tableName)
@@ -71,6 +90,8 @@ class DatabaseService {
 
   // Example: Get paginated data
   async getPaginatedData(tableName, page = 1, limit = 10, filters = {}) {
+    this._checkConnection();
+    
     try {
       let query = supabase
         .from(tableName)
@@ -107,6 +128,8 @@ class DatabaseService {
 
   // Example: Search records
   async searchRecords(tableName, searchColumn, searchTerm) {
+    this._checkConnection();
+    
     try {
       const { data, error } = await supabase
         .from(tableName)
