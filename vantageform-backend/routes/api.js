@@ -1,31 +1,186 @@
 const express = require('express');
 const { authenticateToken } = require("../middleware/auth");
-
+const databaseService = require('../services/database');
 const router = express.Router();
 
-//Public route
-router.get('/health', (req,res) => {
-    res.json({status: 'OK', message: 'API working'});
+// Public route
+router.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'API working' });
 });
 
-//Protected routes
-router.get('/profile', authenticateToken, (req, res) => {
-    res.json({
-        message: 'Protected profile data',
-        user: {
-            id: req.user.sub,
-            email: req.user.email,
-            role: req.user.role
-        }
+// Protected routes
+router.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    const result = await databaseService.getUserProfile(req.user.sub);
+    
+    if (result.success) {
+      res.json({
+        message: 'Profile data retrieved successfully',
+        user: result.data
+      });
+    } else {
+      res.status(404).json({
+        error: 'Profile not found',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Profile route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
     });
+  }
 });
 
-router.get('/dashboard-data', authenticateToken, (req, res) => {
-    res.json({
-        data: 'This is protected dashboard data',
+router.get('/dashboard-data', authenticateToken, async (req, res) => {
+  try {
+    // Example: Get user's dashboard data
+    const result = await databaseService.getPaginatedData('user_data', 1, 10, {
+      user_id: req.user.sub
+    });
+
+    if (result.success) {
+      res.json({
+        message: 'Dashboard data retrieved successfully',
+        data: result.data,
+        pagination: result.pagination,
         userId: req.user.sub,
         timestamp: new Date().toISOString()
+      });
+    } else {
+      res.status(500).json({
+        error: 'Failed to retrieve dashboard data',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Dashboard route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
     });
+  }
+});
+
+// Example: Create a new record
+router.post('/create-record', authenticateToken, async (req, res) => {
+  try {
+    const { tableName, data } = req.body;
+    
+    // Add user_id to the data
+    const recordData = {
+      ...data,
+      user_id: req.user.sub,
+      created_at: new Date().toISOString()
+    };
+
+    const result = await databaseService.createRecord(tableName, recordData);
+
+    if (result.success) {
+      res.status(201).json({
+        message: 'Record created successfully',
+        data: result.data
+      });
+    } else {
+      res.status(400).json({
+        error: 'Failed to create record',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Create record route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+});
+
+// Example: Update a record
+router.put('/update-record/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tableName, updates } = req.body;
+
+    const result = await databaseService.updateRecord(tableName, id, {
+      ...updates,
+      updated_at: new Date().toISOString()
+    });
+
+    if (result.success) {
+      res.json({
+        message: 'Record updated successfully',
+        data: result.data
+      });
+    } else {
+      res.status(400).json({
+        error: 'Failed to update record',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Update record route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+});
+
+// Example: Delete a record
+router.delete('/delete-record/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { tableName } = req.body;
+
+    const result = await databaseService.deleteRecord(tableName, id);
+
+    if (result.success) {
+      res.json({
+        message: 'Record deleted successfully'
+      });
+    } else {
+      res.status(400).json({
+        error: 'Failed to delete record',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Delete record route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
+});
+
+// Example: Search records
+router.get('/search/:tableName', authenticateToken, async (req, res) => {
+  try {
+    const { tableName } = req.params;
+    const { column, term } = req.query;
+
+    if (!column || !term) {
+      return res.status(400).json({
+        error: 'Search column and term are required'
+      });
+    }
+
+    const result = await databaseService.searchRecords(tableName, column, term);
+
+    if (result.success) {
+      res.json({
+        message: 'Search completed successfully',
+        data: result.data
+      });
+    } else {
+      res.status(400).json({
+        error: 'Search failed',
+        details: result.error
+      });
+    }
+  } catch (error) {
+    console.error('Search route error:', error);
+    res.status(500).json({
+      error: 'Internal server error'
+    });
+  }
 });
 
 module.exports = router;
