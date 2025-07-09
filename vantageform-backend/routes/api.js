@@ -21,35 +21,6 @@ router.get('/profile', authenticateToken, (req, res) => {
   });
 });
 
-router.get('/dashboard-data', authenticateToken, async (req, res) => {
-  try {
-    // Example: Get user's dashboard data
-    const result = await databaseService.getPaginatedData('user_data', 1, 10, {
-      user_id: req.user.sub
-    });
-
-    if (result.success) {
-      res.json({
-        message: 'Dashboard data retrieved successfully',
-        data: result.data,
-        pagination: result.pagination,
-        userId: req.user.sub,
-        timestamp: new Date().toISOString()
-      });
-    } else {
-      res.status(500).json({
-        error: 'Failed to retrieve dashboard data',
-        details: result.error
-      });
-    }
-  } catch (error) {
-    console.error('Dashboard route error:', error);
-    res.status(500).json({
-      error: 'Internal server error'
-    });
-  }
-});
-
 // Example: Create a new record
 router.post('/create-record', authenticateToken, async (req, res) => {
   try {
@@ -172,28 +143,24 @@ router.get('/search/:tableName', authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/table/:tableName', authenticateToken, async (req, res) => {
-    try {
-      const { tableName } = req.params;
-      const { columns } = req.query; // optional: specific columns
-      
-      const result = await databaseService.selectFromTable(tableName, columns);
-      
-      if (result.success) {
-        res.json({
-          message: 'Query completed successfully',
-          data: result.data
-        });
-      } else {
-        res.status(400).json({
-          error: 'Query failed',
-          details: result.error
-        });
-      }
-    } catch (error) {
-      console.error('Table query error:', error);
-      res.status(500).json({ error: 'Internal server error' });
+router.get('/sports/names', authenticateToken, async (req, res) => {
+  try {
+    const result = await databaseService.getSportsName();
+    if ( result.success ) {
+      res.json({
+        message: 'Sports name retrieved successfully',
+        data: result.data
+      });
+    } else {
+      res.status(400).json({
+        error: 'Failed to retrieve sports name',
+        details: result.error
+      });
     }
-});
+  }catch (error) {
+    console.error('Sports names route error', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
 
 module.exports = router;

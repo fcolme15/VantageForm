@@ -61,7 +61,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div className="absolute top-full left-0 right-0 mt-1 bg-[#0B1901] border border-green-800 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
           {options.map((option) => (
             <button
-              key={option.id}
+              key={option.name}
               onClick={() => {
                 onSelect(option);
                 setIsOpen(false);

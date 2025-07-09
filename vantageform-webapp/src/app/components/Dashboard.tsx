@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Users, Star, Plus, BarChart3, Activity, Zap } from 'lucide-react';
 import Dropdown from '@/components/dashboard/Dropdown';
 import PlayerCard from '@/components/dashboard/PlayerCard';
@@ -9,7 +9,9 @@ import ProjectionChart from '@/components/dashboard/ProjectionChart';
 import ComparisonPlayerCard from './dashboard/PlayerComparisonCard';
 import SaveModel from "@/components/dashboard/SaveModel";
 import {Sport, MLModel, Player, ProjectionType} from "@/components/dashboard/Interfaces"
-import { SPORTS_DATA, ML_MODELS, RECENT_PLAYERS, PROJECTION_TYPES, SAVED_PROJECTIONS, LINEUPS } from "@/constants/tempDashData"
+import { ML_MODELS, RECENT_PLAYERS, PROJECTION_TYPES, SAVED_PROJECTIONS, LINEUPS } from "@/constants/tempDashData"
+import { useAuth } from '../../contexts/AuthContext'
+
 
 export default function Dashboard() {
   const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
@@ -20,6 +22,9 @@ export default function Dashboard() {
   const [showSaveModel, setShowSaveModel] = useState<boolean>(false);
   const [comparisonPlayer1, setComparisonPlayer1] = useState<Player | null>(RECENT_PLAYERS[1]);
   const [comparisonPlayer2, setComparisonPlayer2] = useState<Player | null>(RECENT_PLAYERS[2]);
+  const { getAuthHeader, session, user } = useAuth();
+  const [sports, setSports] = useState<Sport[]>([]);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
   const handleSaveProjection = (player: Player, projection: ProjectionType) => {
     setSelectedPlayer(player);
@@ -34,6 +39,41 @@ export default function Dashboard() {
     });
     setShowSaveModel(false);
   };
+
+  const fetchSportsNames = async () => {
+    console.log('fetching sports names')
+    console.log('🔑 Current user:', user);
+    console.log('🔑 Current session:', session);
+    const headers = getAuthHeader();
+    if (!headers.Authorization) return;
+    console.log('past auth')
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/sports/names`, {
+        method: 'GET',
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok){
+        throw new Error(`HTTP error, ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      setSports(result.data);
+      console.log('results', result.data);
+    } catch (error) {
+      console.error('Error fetching sports names',error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSportsNames();
+    console.log('sports', sports);
+    console.log('initiating stuff')
+  }, [])
 
   return (
     <div className="mt-21 min-h-screen bg-gradient-to-br from-n-8 to-n-7 text-white relative overflow-hidden">
@@ -73,7 +113,7 @@ export default function Dashboard() {
               Select Sport
             </label>
             <Dropdown 
-              options={SPORTS_DATA}
+              options={sports}
               selected={selectedSport}
               onSelect={(option) => setSelectedSport(option as Sport)}
               placeholder="Choose sport..."
@@ -317,7 +357,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-        {/* HERE */}
 
         <SaveModel
           isOpen={showSaveModel}

@@ -1,9 +1,7 @@
 
 // Type definitions
 export interface Sport {
-    id: string;
     name: string;
-    icon: string;
 }
   
 export interface MLModel {
