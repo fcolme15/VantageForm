@@ -50,6 +50,7 @@ TEAM_NAME_MAPPING = {
     'Chargers': 'Los Angeles Chargers',
     'Los Angeles Chargers': 'Los Angeles Chargers',
     'LAR': 'Los Angeles Rams',
+    'LA': 'Los Angeles Rams',
     'Rams': 'Los Angeles Rams',
     'Los Angeles Rams': 'Los Angeles Rams',
     'ARI': 'Arizona Cardinals',
@@ -104,6 +105,8 @@ teamAcronyms = ['ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', '
 teamColumns = ['season', 'week', 'team', 'opponent_team', 'passing_yards', 'targets', 
                    'passing_epa', 'receiving_yards_after_catch', 'rushing_yards',
                    'def_sacks', 'def_pass_defended']
+
+offensiveColumns = ['passing_yards', 'targets', 'passing_epa', 'receiving_yards_after_catch', 'rushing_yards']
 
 # Position categories needed for database
 positionStatsSchema = {

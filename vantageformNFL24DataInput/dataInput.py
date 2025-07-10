@@ -118,18 +118,6 @@ class SupabaseFantasyImporter:
     def get_or_create_game(self, team1: str, team2: str, week: int, 
                           home_team: Optional[str] = None, away_team: Optional[str] = None,
                           home_score: Optional[int] = None, away_score: Optional[int] = None) -> int:
-        """
-        Get or create game and return game ID
-        
-        Args:
-            team1: First team (could be home or away)
-            team2: Second team (could be home or away)  
-            week: Week number
-            home_team: Explicitly specified home team (optional)
-            away_team: Explicitly specified away team (optional)
-            home_score: Home team score (optional)
-            away_score: Away team score (optional)
-        """
         try:
             # Standardize team names
             team1_std = self.standardize_team_name(team1)
@@ -237,13 +225,6 @@ class SupabaseFantasyImporter:
             return False
     
     def insert_team_stats(self, team_data: Dict, stat_type: str) -> bool:
-        """
-        Insert team stats into appropriate team stats table
-        
-        Args:
-            team_data: Dictionary containing team stats for one game
-            stat_type: Either 'offense' or 'defense'
-        """
         try:
             # Get required IDs
             team_id = self.get_or_create_team(team_data['team_name'])
@@ -382,17 +363,6 @@ def getCSVData(csvPath):
         return None
 
 def getPositionStatsSchema(df, playerNames, position, maxWeeks=5):
-    """
-    Args:
-        df: pandas DataFrame with player data
-        playerNames: list of player names (same position)
-        position: string ('QB', 'WR', 'RB', 'TE')
-        maxWeeks: int, maximum number of recent weeks to keep per player
-    
-    Returns:
-        list of dictionaries with player stats
-    """
-    
     # Filter dataframe for the specified players
     playerData = df[df['player_name'].isin(playerNames) | df['player_display_name'].isin(playerNames)]
     
@@ -446,15 +416,6 @@ def getPositionStatsSchema(df, playerNames, position, maxWeeks=5):
     return resultData
 
 def processPlayerBatches(df, playerBatches, maxWeeks=5):
-    """
-    Arguments:
-        df: pandas DataFrame with player data
-        playerBatches: list of tuples (playerNames_list, position)
-        maxWeeks: int, maximum number of recent weeks to keep per player
-    
-    Returns:
-        dictionary with position as key and list of player stats as value
-    """
     results = {}
     
     for playerNames, positionGroup in playerBatches:
@@ -499,16 +460,6 @@ def preparePlayerDataForDatabase(results):
     return preparedData
 
 def run_player_data_import(importer: SupabaseFantasyImporter, csvFile: str) -> Tuple[int, int]:
-    """
-    Process and import player data from CSV
-    
-    Args:
-        importer: SupabaseFantasyImporter instance
-        csvFile: Path to CSV file
-    
-    Returns:
-        Tuple of (total_imported, total_failed)
-    """
     print("Running player data import...")
     
     # Load CSV data
@@ -612,16 +563,6 @@ def prepareTeamDataForDatabase(results):
     return preparedData
 
 def run_team_data_import(importer: SupabaseFantasyImporter, csvFile: str) -> Tuple[int, int]:
-    """
-    Process and import team data from CSV - placeholder for future implementation
-    
-    Args:
-        importer: SupabaseFantasyImporter instance
-        csvFile: Path to CSV file
-    
-    Returns:
-        Tuple of (total_imported, total_failed)
-    """
     print("Running team data import...")
     
     # Load CSV data
@@ -634,8 +575,6 @@ def run_team_data_import(importer: SupabaseFantasyImporter, csvFile: str) -> Tup
     maxWeeks = 8
     print(f"Processing team data for {maxWeeks} weeks")
     results = getTeamStatsSchema(df, maxWeeks)
-
-
 
     #Prepare data for database
     preparedData = prepareTeamDataForDatabase(results)
@@ -662,12 +601,9 @@ def run_team_data_import(importer: SupabaseFantasyImporter, csvFile: str) -> Tup
 
 
 def main():
-    """Main function to process CSV and import to Supabase"""
-    
-    # Load environment variables from .env file
     load_dotenv()
     
-    # Supabase configuration from .env file
+    #Supabase configuration from .env file
     SUPABASE_URL = os.getenv('SUPABASE_URL')
     SUPABASE_KEY = os.getenv('SUPABASE_KEY')
     
@@ -675,15 +611,13 @@ def main():
         print("Error: Please set SUPABASE_URL and SUPABASE_KEY in your .env file")
         return
     
-    # Initialize importer
+    #Initialize importer
     importer = SupabaseFantasyImporter(SUPABASE_URL, SUPABASE_KEY)
     
     try:
-        # Initialize base data
+        #Initialize base data
         importer.initialize_base_data(sport_name="Football", league_name="NFL", season="2024")
         
-        
-        # CSV file path
         csvFilePlayer = "player_stats_2024.csv"
         csvFileTeam = "stats_team_week_2024.csv"
         importPlayer = True
