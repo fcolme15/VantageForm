@@ -15,6 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the app
 COPY . .
 
+# Debug: List all files in the container
+RUN echo "Files in /app:" && ls -la /app
+RUN echo "Looking for .pkl files:" && find /app -name "*.pkl" -type f
+
 # Expose the port Render expects
 EXPOSE 10000
 
