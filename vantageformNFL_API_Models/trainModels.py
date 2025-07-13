@@ -62,10 +62,10 @@ exclude_columns_per_model = {
 }
 
 model_paths = {
-    'WR': ['wrReceivingYardsLightGBM.plk', 'wrReceivingYardsElasticNet.plk'],
-    'QB': ['qbPassingYardsLightGBM.plk', 'qbPassingYardsElasticNet.plk'],
-    'RB': ['rbRushingYardsLightGBM.plk', ' rbRushingYardsElasticNet.plk'],
-    'TE': ['teReceivingYardsLightGBM.plk', 'teReceivingYardsElasticNet.plk'],
+    'WR': ['wrReceivingYardsLightGBM.pkl', 'wrReceivingYardsElasticNet.pkl'],
+    'QB': ['qbPassingYardsLightGBM.pkl', 'qbPassingYardsElasticNet.pkl'],
+    'RB': ['rbRushingYardsLightGBM.pkl', ' rbRushingYardsElasticNet.pkl'],
+    'TE': ['teReceivingYardsLightGBM.pkl', 'teReceivingYardsElasticNet.pkl'],
 }
 
 def prepare_training_data(player_intervals_data):
