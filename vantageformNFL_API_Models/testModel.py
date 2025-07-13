@@ -47,7 +47,44 @@ def testWRApiEndPoints (player_data):
             print(f"LightGBM Error: {response.status_code} - {response.text}")
             
     except requests.exceptions.RequestException as e:
-        print(f"LightGBM Request failed: {e}")
+        print(f"LightGBM Request failed: {e}") 
+
+def testTEApiEndPoints (player_data):
+    print('='*100)
+    print('API Results for TE Receiving Yards')
+    # ElasticNet prediction
+    try:
+        response = requests.post(
+            f"{base_url}/predict/receivingYardsTeElasticnet",
+            headers=headers,
+            json=player_data
+        )
+        
+        if response.status_code == 200:
+            elasticnet_result = response.json()
+            print(f"ElasticNet Prediction: {elasticnet_result['prediction']}")
+        else:
+            print(f"ElasticNet Error: {response.status_code} - {response.text}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"ElasticNet Request failed: {e}")
+
+    # LightGBM prediction
+    try:
+        response = requests.post(
+            f"{base_url}/predict/receivingYardsTeLightgbm",
+            headers=headers,
+            json=player_data
+        )
+        
+        if response.status_code == 200:
+            lightgbm_result = response.json()
+            print(f"LightGBM Prediction: {lightgbm_result['prediction']}")
+        else:
+            print(f"LightGBM Error: {response.status_code} - {response.text}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"LightGBM Request failed: {e}") 
 
 def predictReceivingYardsElasticNet(new_player_data, model_path):
     '''Makes prediction using the saved ElasticNet model'''
@@ -183,25 +220,33 @@ def main():
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_ROLE_KEY)
 
-    playerInfo = ["Justin Jefferson", "WR"]
-    opponent_team = 'Seattle Seahawks'
+    playerInfo = ["Kyle Pitts", "TE"]
+    if playerInfo[1] == "WR":
+        lightGBMPath = 'wrReceivingYardsLightGBM.pkl'
+        elasticNetPath = 'wrReceivingYardsElasticNet.pkl'
+    elif playerInfo[1] == "TE":
+        lightGBMPath = 'teReceivingYardsLightGBM.pkl'
+        elasticNetPath = 'teReceivingYardsElasticNet.pkl'
+    else:
+        lightGBMPath = 'qbPassingYardsLightGBM.pkl'
+        elasticNetPath = 'qbPassingYardsElasticNet.pkl'
+
+    opponent_team = 'Minnesota Vikings'
     playerData, defensiveTeamData, offensiveTeamData, playerInfo = getDBData(supabase, playerInfo, opponent_team)
     playerFlattenedData = flatten_player_data(playerData, playerInfo, defensiveTeamData, offensiveTeamData)
     print('='*100)
     print("PlayerInfo:")
     print(playerFlattenedData)
 
-    lightGBMPath = 'wrReceivingYardsLightGBM.pkl'
-    elasticNetPath = 'wrReceivingYardsElasticNet.pkl'
+    
 
     lightGBMPrediction = predictReceivingYardsLightGBM(playerFlattenedData, lightGBMPath)
     elasticNetPrediction = predictReceivingYardsElasticNet(playerFlattenedData, elasticNetPath)
     print('='*100)
-    print("lightGBM prediction", lightGBMPrediction)
     print("elasticNet prediction", elasticNetPrediction)
-
-
-    testWRApiEndPoints(playerFlattenedData)
+    print("lightGBM prediction", lightGBMPrediction)
+    
+    testTEApiEndPoints(playerFlattenedData)
 
 
 
