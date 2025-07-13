@@ -1,8 +1,53 @@
 from dotenv import load_dotenv
 import requests
+import json
 import os
 from supabase import create_client, Client
 import pickle
+
+# API base URL
+base_url = "https://vantageform-nfl-api.onrender.com"
+# Headers
+headers = {
+    "Content-Type": "application/json"
+}
+
+def testWRApiEndPoints (player_data):
+    print('='*100)
+    print('API Results for WR Receiving Yards')
+    # ElasticNet prediction
+    try:
+        response = requests.post(
+            f"{base_url}/predict/receivingYardsWrElasticnet",
+            headers=headers,
+            json=player_data
+        )
+        
+        if response.status_code == 200:
+            elasticnet_result = response.json()
+            print(f"ElasticNet Prediction: {elasticnet_result['prediction']}")
+        else:
+            print(f"ElasticNet Error: {response.status_code} - {response.text}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"ElasticNet Request failed: {e}")
+
+    # LightGBM prediction
+    try:
+        response = requests.post(
+            f"{base_url}/predict/receivingYardsWrLightgbm",
+            headers=headers,
+            json=player_data
+        )
+        
+        if response.status_code == 200:
+            lightgbm_result = response.json()
+            print(f"LightGBM Prediction: {lightgbm_result['prediction']}")
+        else:
+            print(f"LightGBM Error: {response.status_code} - {response.text}")
+            
+    except requests.exceptions.RequestException as e:
+        print(f"LightGBM Request failed: {e}")
 
 def predictReceivingYardsElasticNet(new_player_data, model_path):
     '''Makes prediction using the saved ElasticNet model'''
@@ -154,6 +199,11 @@ def main():
     print('='*100)
     print("lightGBM prediction", lightGBMPrediction)
     print("elasticNet prediction", elasticNetPrediction)
+
+
+    testWRApiEndPoints(playerFlattenedData)
+
+
 
 
 if __name__ == "__main__":
