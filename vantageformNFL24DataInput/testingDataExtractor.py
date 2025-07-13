@@ -16,6 +16,13 @@ batches = {
     'RB': rbBatch, 
 }
 
+target_features = {
+    'WR': 'receiving_yards',
+    'QB': 'passing_yards', 
+    'RB': 'rushing_yards',
+    'TE': 'receiving_yards',
+}
+
 def getCSVData(csvPath):
     """Load the CSV file and return a pandas DataFrame"""
     try:
@@ -28,7 +35,7 @@ def getCSVData(csvPath):
         print(f"Error loading CSV: {e}")
         return None
 
-def getPositionStatsSchema(df, playerNames, position, maxWeeks=10):
+def getPositionStatsSchema(df, playerNames, position, maxWeeks=11):
     #Filter dataframe for the specified players
     playerData = df[df['player_display_name'].isin(playerNames)]
     
@@ -82,7 +89,7 @@ def getPositionStatsSchema(df, playerNames, position, maxWeeks=10):
     return resultData
 
 
-def getTeamStatsSchema(df, maxWeeks=13):    
+def getTeamStatsSchema(df, maxWeeks=14):    
     #Keep most recent game weeks
     teamData = df.sort_values(['team', 'week'], ascending=[True, False])
     
@@ -153,12 +160,12 @@ def extract_interval_features(player_name, player_data_dict, team_data_dict, pos
         #Get opponent defensive features (example using last game's opponent)
         opponent_team = player_window[-1]['opponent_team']  #Target game opponent
         opponent_games = team_data_dict[opponent_team]
-        opponent_defensive_features = calculate_opponent_defensive_features(opponent_games, player_window[-1])
+        opponent_defensive_features = calculate_opponent_defensive_features(opponent_games, start_idx, end_idx)
         
         #Get target variable 
         target_game_idx = end_idx
         if target_game_idx < len(player_games):
-            target_value = player_games[target_game_idx]['receiving_yards']
+            target_value = player_games[target_game_idx][target_features[position]]
         else:
             continue  #No target game available
             
@@ -168,14 +175,16 @@ def extract_interval_features(player_name, player_data_dict, team_data_dict, pos
             'interval': interval,
             'target_week': player_games[target_game_idx]['week'],
             'target_value': target_value,
-            'def_sacks': opponent_defensive_features['opp_def_sacks_l8'],
-            'opp_def_pass_defended': opponent_defensive_features['opp_def_pass_defended_l8']
+            'opp_def_sacks': opponent_defensive_features['opp_def_sacks_l5'],
+            'opp_def_pass_defended': opponent_defensive_features['opp_def_pass_defended_l5']
         }
         for key in positionStatsSchema[position]:
             interval_feature[key] = player_features[f'{key}_l5']
 
         for key in offensiveColumns:
-            interval_feature[key] = team_offensive_features[f'{key}_l5']
+            interval_feature[f'team_off_{key}'] = team_offensive_features[f'team_off_{key}_l5']
+        
+
             
         interval_features.append(interval_feature)
     
@@ -209,36 +218,41 @@ def calculate_team_offensive_features(team_window):
     features = {}
 
     for key in offensiveColumns:
-        features[f'{key}_l5'] = sum(game[key] for game in team_window) / len(team_window)
+        features[f'team_off_{key}_l5'] = sum(game[key] for game in team_window) / len(team_window)
 
     return features
 
-def calculate_opponent_defensive_features(opponent_games, target_game):
+def calculate_opponent_defensive_features(opponent_games,  start_idx, end_idx):
     features = {}
 
     #Opponent's last 8 games before the target game
-    recent_games = opponent_games[-8:]
+    recent_games = opponent_games[start_idx:end_idx]
     
-    features['opp_def_pass_defended_l8'] = sum(game['def_pass_defended'] for game in recent_games) / len(recent_games)
-    features['opp_def_sacks_l8'] = sum(game['def_sacks'] for game in recent_games) / len(recent_games)
+    features['opp_def_pass_defended_l5'] = sum(game['def_pass_defended'] for game in recent_games) / len(recent_games)
+    features['opp_def_sacks_l5'] = sum(game['def_sacks'] for game in recent_games) / len(recent_games)
     
     return features
     
-def main():
+def main(position):
     csvFilePlayer = "player_stats_2024.csv"
     csvFileTeam = "stats_team_week_2024.csv"
-    position = "WR"
+    playersPerPosition = {
+        'WR': wrBatch,
+        'QB': qbBatch, 
+        'RB': rbBatch,
+        'TE': teBatch,
+    }
 
     playerData, teamData = playerDataImport(csvFilePlayer, csvFileTeam, position)
 
     players = []
-    for player in wrBatch[0]:
+    for player in playersPerPosition[position][0]:
         player_features = extract_interval_features(player, playerData, teamData, position)
         players.append(player_features)
-    #print(players)
+    print(players)
+    return players
+    
 
 if __name__ == "__main__":
-    main()
-
-
+    main("WR")
 

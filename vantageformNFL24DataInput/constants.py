@@ -152,18 +152,49 @@ qbBatch = ([
     'Baker Mayfield',
     'Jordan Love',
     'Bryce Young',
-    'Anthony Richardson'
+    'Anthony Richardson',
+    'Geno Smith',
+    'Sam Darnold',
+    'Bo Nix',
+    'Russell Wilson',
+    'Caleb Williams'
 ], 'QB')
 
-wrBatch = (['Justin Jefferson', 'Tyreek Hill', 'CeeDee Lamb', 'Amon-Ra St. Brown', "Ja'Marr Chase", 
-  'A.J. Brown', 'Puka Nacua', 'Davante Adams', 'Garrett Wilson', 'D.J. Moore', 'Mike Evans', 
-  'Brandon Aiyuk', 'DK Metcalf', 'Jaylen Waddle',  'Terry McLaurin'], 'WR')
+wrBatch = (
+    [
+        'Justin Jefferson', 'Tyreek Hill', 'CeeDee Lamb', 'Amon-Ra St. Brown', "Ja'Marr Chase",
+        'A.J. Brown', 'Puka Nacua', 'Davante Adams', 'Garrett Wilson', 'D.J. Moore', 'Mike Evans',
+        'Brandon Aiyuk', 'DK Metcalf', 'Jaylen Waddle', 'Terry McLaurin', 'Chris Olave', 'Drake London', 
+        'DeVonta Smith', 'Adam Thielen', 'Amari Cooper', 'Christian Kirk', 'Zay Flowers', 'Tank Dell', 'Nico Collins', 
+        'George Pickens', 'Jerry Jeudy', 'Jahan Dotson', 'Keenan Allen', 'Christian Watson', 'Marquise Brown', 'Cooper Kupp',
+        'Chris Godwin', 'Deebo Samuel', 
+    ],
+    'WR'
+)
 
-teBatch = (['Travis Kelce', 'George Kittle', 'Mark Andrews', 'Sam LaPorta', 'T.J. Hockenson',
-  'Dallas Goedert', 'Kyle Pitts'], 'TE')
+teBatch = (
+    [
+        'Travis Kelce', 'George Kittle', 'Mark Andrews', 'Sam LaPorta', 'T.J. Hockenson',
+        'Dallas Goedert', 'Kyle Pitts',
+        'Evan Engram', 'Dalton Kincaid', 'David Njoku', 'Jake Ferguson', 'Cole Kmet',
+        'Hunter Henry', 'Tyler Higbee', 'Pat Freiermuth', 'Gerald Everett', 'Chigoziem Okonkwo',
+        'Noah Fant', 'Luke Musgrave'
+    ],
+    'TE'
+)
 
-rbBatch = (['Bijan Robinson', 'Jonathan Taylor', 'Saquon Barkley', 'Breece Hall',
-  'Josh Jacobs', 'Joe Mixon', 'Derrick Henry', 'Kyren Williams', 'Travis Etienne',
-  'Alvin Kamara', 'Aaron Jones', 'David Montgomery', 'Javonte Williams', 'James Cook',
-  'Tony Pollard', 'Kenneth Walker'], 'RB')
+
+rbBatch = (
+    [
+        'Bijan Robinson', 'Jonathan Taylor', 'Saquon Barkley', 'Breece Hall',
+        'Josh Jacobs', 'Joe Mixon', 'Derrick Henry', 'Kyren Williams', 'Travis Etienne',
+        'Alvin Kamara', 'Aaron Jones', 'David Montgomery', 'James Cook',
+        'Tony Pollard', 'Kenneth Walker', 'D’Andre Swift'
+        'Najee Harris', 'Rhamondre Stevenson', 
+        'Zack Moss', 'Chuba Hubbard', 'Jerome Ford', 'Brian Robinson Jr.',
+        'Rachaad White', 'Miles Sanders', 'Alexander Mattison', 'De’Von Achane',
+         
+    ],
+    'RB'
+)
 
