@@ -146,8 +146,8 @@ def main():
     print("PlayerInfo:")
     print(playerFlattenedData)
 
-    lightGBMPath = 'wrReceivingYardsLightGBM.plk'
-    elasticNetPath = 'wrReceivingYardsElasticNet.plk'
+    lightGBMPath = 'wrReceivingYardsLightGBM.pkl'
+    elasticNetPath = 'wrReceivingYardsElasticNet.pkl'
 
     lightGBMPrediction = predictReceivingYardsLightGBM(playerFlattenedData, lightGBMPath)
     elasticNetPrediction = predictReceivingYardsElasticNet(playerFlattenedData, elasticNetPath)
