@@ -1,30 +1,19 @@
 
-import {Sport, MLModel, Player, ProjectionType, SavedProjection, Lineup} from "@/components/dashboard/Interfaces"
-
-
-// Temp Data constants for Dashboard
-export const SPORTS_DATA: Sport[] = [
-    { id: 'nfl', name: 'NFL Football', icon: '🏈' },
-    { id: 'nba', name: 'NBA Basketball', icon: '🏀' },
-    { id: 'mlb', name: 'MLB Baseball', icon: '⚾' },
-    { id: 'nhl', name: 'NHL Hockey', icon: '🏒' }
-];
+import { MLModel, Player, ProjectionType, SavedProjection, Lineup} from "@/components/dashboard/Interfaces"
   
 export const ML_MODELS: MLModel[] = [
     { id: 'neural', name: 'Neural Network v2.1', accuracy: '94%' },
     { id: 'ensemble', name: 'Ensemble Model', accuracy: '91%' },
-    { id: 'regression', name: 'Linear Regression', accuracy: '87%' },
-    { id: 'forest', name: 'Random Forest', accuracy: '89%' }
 ];
   
-export const RECENT_PLAYERS: Player[] = [
-    { id: 1, name: 'Josh Allen', team: 'BUF', position: 'QB', sport: 'nfl' },
-    { id: 2, name: 'Cooper Kupp', team: 'LAR', position: 'WR', sport: 'nfl' },
-    { id: 3, name: 'Travis Kelce', team: 'KC', position: 'TE', sport: 'nfl' },
-    { id: 4, name: 'Tyreek Hill', team: 'MIA', position: 'WR', sport: 'nfl' },
-    { id: 5, name: 'Lamar Jackson', team: 'BAL', position: 'QB', sport: 'nfl' },
-    { id: 6, name: 'Davante Adams', team: 'LV', position: 'WR', sport: 'nfl' }
-];
+// export const RECENT_PLAYERS: Player[] = [
+//     { id: 1, name: 'Josh Allen', team: 'BUF', position: 'QB', sport: 'nfl' },
+//     { id: 2, name: 'Cooper Kupp', team: 'LAR', position: 'WR', sport: 'nfl' },
+//     { id: 3, name: 'Travis Kelce', team: 'KC', position: 'TE', sport: 'nfl' },
+//     { id: 4, name: 'Tyreek Hill', team: 'MIA', position: 'WR', sport: 'nfl' },
+//     { id: 5, name: 'Lamar Jackson', team: 'BAL', position: 'QB', sport: 'nfl' },
+//     { id: 6, name: 'Davante Adams', team: 'LV', position: 'WR', sport: 'nfl' }
+// ];
   
 export const PROJECTION_TYPES: ProjectionType[] = [
     { id: 'receptions', name: 'Receptions', unit: 'rec' },

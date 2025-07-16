@@ -1,30 +1,43 @@
+
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Users, Star, Plus, BarChart3, Activity, Zap } from 'lucide-react';
+import { Users, Star, Plus, Activity } from 'lucide-react';
 import Dropdown from '@/components/dashboard/Dropdown';
 import PlayerCard from '@/components/dashboard/PlayerCard';
-import SearchBar from '@/components/dashboard/SearchBar';
+import PlayerSearchComponent from '@/components/dashboard/SearchBar';
 import ProjectionChart from '@/components/dashboard/ProjectionChart';
-import ComparisonPlayerCard from './dashboard/PlayerComparisonCard';
+// import ComparisonPlayerCard from './dashboard/PlayerComparisonCard';
 import SaveModel from "@/components/dashboard/SaveModel";
-import {Sport, MLModel, Player, ProjectionType} from "@/components/dashboard/Interfaces"
-import { ML_MODELS, RECENT_PLAYERS, PROJECTION_TYPES, SAVED_PROJECTIONS, LINEUPS } from "@/constants/tempDashData"
-import { useAuth } from '../../contexts/AuthContext'
-
+import {Sport, MLModel, Player, ProjectionType, RawPlayer } from "@/components/dashboard/Interfaces"
+import { PROJECTION_TYPES, SAVED_PROJECTIONS } from "@/constants/tempDashData"
+import { useSportsApi } from "@/services/apiservices"
 
 export default function Dashboard() {
-  const [selectedSport, setSelectedSport] = useState<Sport | null>(null);
-  const [selectedModel, setSelectedModel] = useState<MLModel | null>(null);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(RECENT_PLAYERS[0]);
+  const [selectedSport, setSelectedSport] = useState<Sport>({name:'Football'});
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [selectedProjection, setSelectedProjection] = useState<ProjectionType>(PROJECTION_TYPES[0]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [showSaveModel, setShowSaveModel] = useState<boolean>(false);
-  const [comparisonPlayer1, setComparisonPlayer1] = useState<Player | null>(RECENT_PLAYERS[1]);
-  const [comparisonPlayer2, setComparisonPlayer2] = useState<Player | null>(RECENT_PLAYERS[2]);
-  const { getAuthHeader, session, user } = useAuth();
+  const [recentPlayers, updateRecentPlayers] = useState<Player[]>([]);
+  const [projections, setProjections] = useState<number[]>([]);
+
+  // const { getAuthHeader, session, user } = useAuth();
   const [sports, setSports] = useState<Sport[]>([]);
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+  const { dashboardGeneralInfo, getPlayersBySport,
+    wrReceivingYardsLightGBMPrediction, wrReceivingYardsElasticNetPrediction,
+    teReceivingYardsLightGBMPrediction, teReceivingYardsElasticNetPrediction,
+    qbPassingYardsLightGBMPrediction, qbPassingYardsElasticNetPrediction} = useSportsApi();
+
+  type Position = 'WR' | 'RB' | 'QB' | 'TE';
+
+  const projectionByPosition: Record<Position, string> = {
+    'WR': 'Receiving Yards',
+    'RB': 'Rushing Yards',
+    'QB': 'Passing Yards',
+    'TE': 'Receiving Yards',
+  }
+
 
   const handleSaveProjection = (player: Player, projection: ProjectionType) => {
     setSelectedPlayer(player);
@@ -40,40 +53,117 @@ export default function Dashboard() {
     setShowSaveModel(false);
   };
 
-  const fetchSportsNames = async () => {
-    console.log('fetching sports names')
-    console.log('🔑 Current user:', user);
-    console.log('🔑 Current session:', session);
-    const headers = getAuthHeader();
-    if (!headers.Authorization) return;
-    console.log('past auth')
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/sports/names`, {
-        method: 'GET',
-        headers: {
-          ...headers,
-          'Content-Type': 'application/json'
-        }
-      });
+  useEffect(() => {
+    const fetchAllPredictions = async () => {
+      try {
+        const rawData = await getPlayersBySport(selectedSport.name)
+        const transformed = rawData.map((p: RawPlayer): Player => ({
+          id: p.playerid,
+          name: p.name,
+          team: p.roster[0].teams.name,
+          position: p.position,
+          sport: p.roster[0].teams.leagues.sports.name
+        }));
 
-      if (!response.ok){
-        throw new Error(`HTTP error, ${response.statusText}`);
+        setPlayers(transformed);
+        console.log(players);
+
+      } catch (error) {
+        console.error('Failed to fetch predictions:', error);
+      }
+    };
+
+    fetchAllPredictions();
+    console.log(players);
+  }, [selectedSport]);
+
+
+  useEffect(() => {
+    const fetchAllPredictions = async () => {
+      // const wrPlayerInfo = ['Justin Jefferson', 'Chicago Bears'];
+      // const tePlayerInfo = ['George Kittle', 'Chicago Bears'];
+      // const qbPlayerInfo = ['Lamar Jackson', 'Chicago Bears'];
+
+      try {
+        const data = await dashboardGeneralInfo();
+        setSports(data.sports as Sport[]);
+
+        // let result = await wrReceivingYardsLightGBMPrediction(wrPlayerInfo);
+        // console.log('wr lightgbm', result);
+        //
+        // result = await wrReceivingYardsElasticNetPrediction(wrPlayerInfo);
+        // console.log('wr elasticnet', result);
+        //
+        // result = await teReceivingYardsLightGBMPrediction(tePlayerInfo);
+        // console.log('te lightgbm', result);
+        //
+        // result = await teReceivingYardsElasticNetPrediction(tePlayerInfo);
+        // console.log('te elasticnet', result);
+        //
+        // result = await qbPassingYardsLightGBMPrediction(qbPlayerInfo);
+        // console.log('qb lightgbm', result);
+        //
+        // result = await qbPassingYardsElasticNetPrediction(qbPlayerInfo);
+        // console.log('qb elasticnet', result);
+      } catch (error) {
+        console.error('Failed to fetch predictions:', error);
       }
 
-      const result = await response.json();
+      console.log('initiating stuff');
+    };
 
-      setSports(result.data);
-      console.log('results', result.data);
-    } catch (error) {
-      console.error('Error fetching sports names',error);
+    // Call the async function
+    fetchAllPredictions();
+    setSelectedSport({name:'Football'})
+  }, []);
+
+  const handlePlayerSelect = (newPlayer: Player) => {
+    console.log('Player selected in callback:', newPlayer.name);
+    setSelectedPlayer(newPlayer);
+    const isDuplicate = recentPlayers.find(player => player.id === newPlayer.id);
+    if (!isDuplicate) {
+      updateRecentPlayers([newPlayer, ...recentPlayers])
     }
+
   };
 
   useEffect(() => {
-    fetchSportsNames();
-    console.log('sports', sports);
-    console.log('initiating stuff')
-  }, [])
+    if (selectedPlayer) {
+      const fetchAllPredictions = async () => {
+        const playerInfo = [selectedPlayer.name , 'Chicago Bears']
+        try {
+          switch (selectedPlayer?.position){
+            case 'WR':
+              const lightGBMPredictionwr = await wrReceivingYardsLightGBMPrediction(playerInfo);
+              const elasticNetPredictionwr = await wrReceivingYardsElasticNetPrediction(playerInfo);
+              console.log(lightGBMPredictionwr);
+              setProjections([lightGBMPredictionwr.prediction.toFixed(2), elasticNetPredictionwr.prediction.toFixed(2)]);
+              break;
+            case 'RB':
+              const lightGBMPredictionrb = await teReceivingYardsLightGBMPrediction(playerInfo);
+              const elasticNetPredictionrb = await teReceivingYardsElasticNetPrediction(playerInfo);
+              setProjections([lightGBMPredictionrb.prediction.toFixed(2), elasticNetPredictionrb.prediction.toFixed(2)]);
+              break;
+            case 'QB':
+              const lightGBMPredictionqb = await qbPassingYardsLightGBMPrediction(playerInfo);
+              const elasticNetPredictionqb = await qbPassingYardsElasticNetPrediction(playerInfo);
+              setProjections([lightGBMPredictionqb.prediction.toFixed(2), elasticNetPredictionqb.prediction.toFixed(2)]);
+              break;
+            default:
+              const lightGBMPredictionte = await teReceivingYardsLightGBMPrediction(playerInfo);
+              const elasticNetPredictionte = await teReceivingYardsElasticNetPrediction(playerInfo);
+              setProjections([lightGBMPredictionte.prediction.toFixed(2), elasticNetPredictionte.prediction.toFixed(2)]);
+              break;
+          }
+        } catch (error) {
+          console.error('Failed to fetch predictions:', error);
+        }
+      }
+      fetchAllPredictions();
+    }
+  }, [selectedPlayer]);
+
+
 
   return (
     <div className="mt-21 min-h-screen bg-gradient-to-br from-n-8 to-n-7 text-white relative overflow-hidden">
@@ -121,18 +211,18 @@ export default function Dashboard() {
           </div>
 
           {/* ML Model Selection */}
-          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50 z-20">
-            <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
-              ML Model
-            </label>
-            <Dropdown
-              options={ML_MODELS}
-              selected={selectedModel}
-              onSelect={(option) => setSelectedModel(option as MLModel)}
-              placeholder="Select model..."
-            />
-          </div>
+          {/*<div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50 z-20">*/}
+          {/*  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">*/}
+          {/*    <BarChart3 className="w-4 h-4" />*/}
+          {/*    ML Model*/}
+          {/*  </label>*/}
+          {/*  <Dropdown*/}
+          {/*    options={ML_MODELS}*/}
+          {/*    selected={selectedModel}*/}
+          {/*    onSelect={(option) => setSelectedModel(option as MLModel)}*/}
+          {/*    placeholder="Select model..."*/}
+          {/*  />*/}
+          {/*</div>*/}
 
           {/* Recent Players */}
           <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">
@@ -141,7 +231,7 @@ export default function Dashboard() {
               Recent Players
             </label>
             <div className="space-y-2  lg:min-h-32 max-h-32 scrollbar-hide overflow-y-auto">
-              {RECENT_PLAYERS.slice(0, 3).map((player) => (
+              {recentPlayers.map((player) => (
                 <PlayerCard
                   key={player.id}
                   player={player}
@@ -152,17 +242,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Search */}
-          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              Find Player
-            </label>
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search players..."
-            />
-          </div>
+          <PlayerSearchComponent players={players} onPlayerSelect={handlePlayerSelect}/>
         </div>
 
         {/* Top Content - Player Analysis + Saved Projections */}
@@ -179,7 +259,7 @@ export default function Dashboard() {
                       </div>
                       <div>
                         <h2 className="text-2xl font-bold text-white">{selectedPlayer.name}</h2>
-                        <p className="text-gray-300">{selectedPlayer.team} • {selectedPlayer.position} • Age 28</p>
+                        <p className="text-gray-300">{selectedPlayer.team} • {selectedPlayer.position}</p>
                       </div>
                     </div>
                     <button
@@ -194,29 +274,19 @@ export default function Dashboard() {
                   <div className="flex-1 overflow-y-auto">
                     <div className="mb-6">
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Projection Type
+                        Projection Type: {selectedPlayer ? projectionByPosition[selectedPlayer.position as Position] || 'Unknown' : 'Select a player'}
                       </label>
-                      <Dropdown
-                        options={PROJECTION_TYPES}
-                        selected={selectedProjection}
-                        onSelect={(option) => setSelectedProjection(option as ProjectionType)}
-                        placeholder="Select projection..."
-                        className="max-w-xs"
-                      />
+
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                       <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-green-400">8.7</div>
-                        <div className="text-sm text-gray-300">Projected</div>
+                        <div className="text-2xl font-bold text-green-400">{projections[0]}</div>
+                        <div className="text-sm text-gray-300">Projected Using LightGBM</div>
                       </div>
                       <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-blue-400">7.2</div>
-                        <div className="text-sm text-gray-300">Season Avg</div>
-                      </div>
-                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-2xl font-bold text-purple-400">94%</div>
-                        <div className="text-sm text-gray-300">Confidence</div>
+                        <div className="text-2xl font-bold text-green-400">{projections[1]}</div>
+                        <div className="text-sm text-gray-300">Projected Using ElasticNet</div>
                       </div>
                     </div>
 
@@ -247,7 +317,7 @@ export default function Dashboard() {
                 <button
                   key={proj.id}
                   onClick={() => {
-                    const player = RECENT_PLAYERS.find(p => p.name === proj.player);
+                    const player = recentPlayers.find(p => p.name === proj.player);
                     const projection = PROJECTION_TYPES.find(p => p.name === proj.projection);
                     if (player && projection) {
                       handleSaveProjection(player, projection);
@@ -268,95 +338,95 @@ export default function Dashboard() {
         </div>
 
         {/* Bottom Content - 2x2 Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Player Comparison - 2/3 width */}
-          <div className="lg:col-span-2">
-            <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-[550px] lg:h-[560px] flex flex-col">
-              <div className="flex items-center justify-between mb-6 flex-shrink-0">
-                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                  <Zap className="w-6 h-6 text-yellow-400" />
-                  Player Comparison
-                </h3>
-                <div className="flex items-center gap-2 text-green-400">
-                  <BarChart3 className="w-4 h-4" />
-                  <span className="text-sm">Head-to-Head</span>
-                </div>
-              </div>
+        {/*<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">*/}
+        {/*  /!* Player Comparison - 2/3 width *!/*/}
+        {/*  <div className="lg:col-span-2">*/}
+        {/*    <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-[550px] lg:h-[560px] flex flex-col">*/}
+        {/*      <div className="flex items-center justify-between mb-6 flex-shrink-0">*/}
+        {/*        <h3 className="text-xl font-semibold text-white flex items-center gap-2">*/}
+        {/*          <Zap className="w-6 h-6 text-yellow-400" />*/}
+        {/*          Player Comparison*/}
+        {/*        </h3>*/}
+        {/*        <div className="flex items-center gap-2 text-green-400">*/}
+        {/*          <BarChart3 className="w-4 h-4" />*/}
+        {/*          <span className="text-sm">Head-to-Head</span>*/}
+        {/*        </div>*/}
+        {/*      </div>*/}
 
-              <div className="flex-1 overflow-y-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <ComparisonPlayerCard
-                    player={comparisonPlayer1}
-                    title="Player A"
-                    onClick={() => {
-                      // In a real app, this would open a player selection modal
-                      const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);
-                      if (nextPlayer) setComparisonPlayer1(nextPlayer);
-                    }}
-                  />
-                  <ComparisonPlayerCard
-                    player={comparisonPlayer2}
-                    title="Player B"
-                    onClick={() => {
-                      // In a real app, this would open a player selection modal
-                      const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);
-                      if (nextPlayer) setComparisonPlayer2(nextPlayer);
-                    }}
-                  />
-                </div>
+        {/*      <div className="flex-1 overflow-y-auto">*/}
+        {/*        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">*/}
+        {/*          <ComparisonPlayerCard*/}
+        {/*            player={comparisonPlayer1}*/}
+        {/*            title="Player A"*/}
+        {/*            onClick={() => {*/}
+        {/*              // In a real app, this would open a player selection modal*/}
+        {/*              const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);*/}
+        {/*              if (nextPlayer) setComparisonPlayer1(nextPlayer);*/}
+        {/*            }}*/}
+        {/*          />*/}
+        {/*          <ComparisonPlayerCard*/}
+        {/*            player={comparisonPlayer2}*/}
+        {/*            title="Player B"*/}
+        {/*            onClick={() => {*/}
+        {/*              // In a real app, this would open a player selection modal*/}
+        {/*              const nextPlayer = RECENT_PLAYERS.find(p => p.id !== comparisonPlayer1?.id && p.id !== comparisonPlayer2?.id);*/}
+        {/*              if (nextPlayer) setComparisonPlayer2(nextPlayer);*/}
+        {/*            }}*/}
+        {/*          />*/}
+        {/*        </div>*/}
 
-                {comparisonPlayer1 && comparisonPlayer2 && (
-                  <div className="pt-6 border-t border-green-800/50">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-lg font-bold text-green-400 mb-1">Advantage</div>
-                        <div className="text-sm text-white">{comparisonPlayer1.name}</div>
-                        <div className="text-xs text-gray-300">Better matchup</div>
-                      </div>
-                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-lg font-bold text-blue-400 mb-1">Similar</div>
-                        <div className="text-sm text-white">Target Share</div>
-                        <div className="text-xs text-gray-300">Both ~22%</div>
-                      </div>
-                      <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
-                        <div className="text-lg font-bold text-purple-400 mb-1">Edge</div>
-                        <div className="text-sm text-white">{comparisonPlayer2.name}</div>
-                        <div className="text-xs text-gray-300">Lower salary</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        {/*        {comparisonPlayer1 && comparisonPlayer2 && (*/}
+        {/*          <div className="pt-6 border-t border-green-800/50">*/}
+        {/*            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">*/}
+        {/*              <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">*/}
+        {/*                <div className="text-lg font-bold text-green-400 mb-1">Advantage</div>*/}
+        {/*                <div className="text-sm text-white">{comparisonPlayer1.name}</div>*/}
+        {/*                <div className="text-xs text-gray-300">Better matchup</div>*/}
+        {/*              </div>*/}
+        {/*              <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">*/}
+        {/*                <div className="text-lg font-bold text-blue-400 mb-1">Similar</div>*/}
+        {/*                <div className="text-sm text-white">Target Share</div>*/}
+        {/*                <div className="text-xs text-gray-300">Both ~22%</div>*/}
+        {/*              </div>*/}
+        {/*              <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">*/}
+        {/*                <div className="text-lg font-bold text-purple-400 mb-1">Edge</div>*/}
+        {/*                <div className="text-sm text-white">{comparisonPlayer2.name}</div>*/}
+        {/*                <div className="text-xs text-gray-300">Lower salary</div>*/}
+        {/*              </div>*/}
+        {/*            </div>*/}
+        {/*          </div>*/}
+        {/*        )}*/}
+        {/*      </div>*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
 
-          {/* Saved Lineups - 1/3 width */}
-          <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-80 lg:h-[560px]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Users className="w-5 h-5 text-green-400" />
-                Saved Lineups
-              </h3>
-            </div>
-            <div className="space-y-3 max-h-[calc(100%-4rem)] scrollbar-hide overflow-y-auto">
-              {LINEUPS.map((lineup) => (
-                <div key={lineup.id} className="bg-[#0B1901]/50 hover:bg-green-800/20 rounded-lg p-3 transition-all cursor-pointer">
-                  <div className="font-medium text-white text-sm">{lineup.name}</div>
-                  <div className="text-xs text-gray-300 mt-1">
-                    {lineup.players} players • {lineup.projections} projections
-                  </div>
-                  <div className="flex justify-between items-center mt-2">
-                    <span className="text-xs text-gray-400">{lineup.created}</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-yellow-400" />
-                      <span className="text-xs text-yellow-400">Saved</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        {/*  /!* Saved Lineups - 1/3 width *!/*/}
+        {/*  <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-6 border border-green-800/50 h-80 lg:h-[560px]">*/}
+        {/*    <div className="flex items-center justify-between mb-4">*/}
+        {/*      <h3 className="text-lg font-semibold text-white flex items-center gap-2">*/}
+        {/*        <Users className="w-5 h-5 text-green-400" />*/}
+        {/*        Saved Lineups*/}
+        {/*      </h3>*/}
+        {/*    </div>*/}
+        {/*    <div className="space-y-3 max-h-[calc(100%-4rem)] scrollbar-hide overflow-y-auto">*/}
+        {/*      {LINEUPS.map((lineup) => (*/}
+        {/*        <div key={lineup.id} className="bg-[#0B1901]/50 hover:bg-green-800/20 rounded-lg p-3 transition-all cursor-pointer">*/}
+        {/*          <div className="font-medium text-white text-sm">{lineup.name}</div>*/}
+        {/*          <div className="text-xs text-gray-300 mt-1">*/}
+        {/*            {lineup.players} players • {lineup.projections} projections*/}
+        {/*          </div>*/}
+        {/*          <div className="flex justify-between items-center mt-2">*/}
+        {/*            <span className="text-xs text-gray-400">{lineup.created}</span>*/}
+        {/*            <div className="flex items-center gap-1">*/}
+        {/*              <Star className="w-3 h-3 text-yellow-400" />*/}
+        {/*              <span className="text-xs text-yellow-400">Saved</span>*/}
+        {/*            </div>*/}
+        {/*          </div>*/}
+        {/*        </div>*/}
+        {/*      ))}*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <SaveModel
           isOpen={showSaveModel}

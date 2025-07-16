@@ -220,7 +220,7 @@ def main():
 
     supabase: Client = create_client(SUPABASE_URL, SUPABASE_ROLE_KEY)
 
-    playerInfo = ["Kyle Pitts", "TE"]
+    playerInfo = ["Justin Jefferson", "WR"]
     if playerInfo[1] == "WR":
         lightGBMPath = 'wrReceivingYardsLightGBM.pkl'
         elasticNetPath = 'wrReceivingYardsElasticNet.pkl'
@@ -231,7 +231,7 @@ def main():
         lightGBMPath = 'qbPassingYardsLightGBM.pkl'
         elasticNetPath = 'qbPassingYardsElasticNet.pkl'
 
-    opponent_team = 'Minnesota Vikings'
+    opponent_team = 'Chicago Bears'
     playerData, defensiveTeamData, offensiveTeamData, playerInfo = getDBData(supabase, playerInfo, opponent_team)
     playerFlattenedData = flatten_player_data(playerData, playerInfo, defensiveTeamData, offensiveTeamData)
     print('='*100)
@@ -240,13 +240,13 @@ def main():
 
     
 
-    lightGBMPrediction = predictReceivingYardsLightGBM(playerFlattenedData, lightGBMPath)
-    elasticNetPrediction = predictReceivingYardsElasticNet(playerFlattenedData, elasticNetPath)
-    print('='*100)
-    print("elasticNet prediction", elasticNetPrediction)
-    print("lightGBM prediction", lightGBMPrediction)
+    # lightGBMPrediction = predictReceivingYardsLightGBM(playerFlattenedData, lightGBMPath)
+    # elasticNetPrediction = predictReceivingYardsElasticNet(playerFlattenedData, elasticNetPath)
+    # print('='*100)
+    # print("elasticNet prediction", elasticNetPrediction)
+    # print("lightGBM prediction", lightGBMPrediction)
     
-    testTEApiEndPoints(playerFlattenedData)
+    testWRApiEndPoints(playerFlattenedData)
 
 
 

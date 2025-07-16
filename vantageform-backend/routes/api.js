@@ -143,24 +143,51 @@ router.get('/search/:tableName', authenticateToken, async (req, res) => {
   }
 });
 
-router.get('/sports/names', authenticateToken, async (req, res) => {
+router.get('/sport/info', authenticateToken, async (req, res) => {
   try {
-    const result = await databaseService.getSportsName();
-    if ( result.success ) {
-      res.json({
-        message: 'Sports name retrieved successfully',
-        data: result.data
-      });
-    } else {
-      res.status(400).json({
+    const sports = await databaseService.getSportNames();
+
+    if (!sports.success) {
+      return res.status(400).json({
         error: 'Failed to retrieve sports name',
-        details: result.error
+        details: sports.error
       });
     }
+
+    res.json({
+      message: 'Sports info retrieved successfully',
+      data: {
+        sports: sports.data
+      }
+    });
+
+  } catch (error) {
+    console.error('Sports info route error', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/sport/players', authenticateToken, async (req, res) => {
+  try {
+    const { sport } = req.query;
+    const players = await databaseService.getPlayerNamesBySport(sport);
+    if ( !players.success ) {
+      res.status(400).json({
+        error: 'Failed to retrieve sports name',
+        details: players.error
+      });
+    }
+
+    res.json({
+      message: 'Players retrieved successfully',
+      data: players.data
+    });
+
   }catch (error) {
-    console.error('Sports names route error', error);
+    console.error('Sports players route error', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 })
+
 
 module.exports = router;

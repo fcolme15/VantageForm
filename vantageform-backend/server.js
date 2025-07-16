@@ -4,6 +4,7 @@ dotenv.config();
 const express = require('express');
 const cors = require('cors');
 const apiRoutes = require('./routes/api.js');
+const predictionRoutes = require('./routes/prediction.js');
 
 
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 //Routes
 app.use('/api', apiRoutes);
+app.use('/prediction', predictionRoutes);
 
 //Basic route
 app.get('/', (req,res) => {

@@ -41,3 +41,28 @@ export interface Lineup {
     projections: number;
     created: string;
 }
+
+export interface SearchBarProps {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder: string;
+    players: Player[]; // Add this prop
+    onPlayerSelect?: (player: Player) => void; // Optional callback
+}
+
+export interface RawPlayer {
+    name: string;
+    playerid: number;
+    position: string;
+    roster: {
+        teams: {
+            name: string;
+            leagues: {
+                sports: {
+                    name: string;
+                };
+            };
+        };
+    }[];
+}
+
