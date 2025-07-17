@@ -134,7 +134,7 @@ export const pricing = [
     id: "1",
     title: "Premium",
     description: "Unlock more predictions, comparisons, and saved profiles.",
-    price: "9.99",
+    price: null,
     features: [
       "All Basic features included",
       "Increased daily searches",

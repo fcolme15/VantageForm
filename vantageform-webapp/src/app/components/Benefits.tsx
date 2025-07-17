@@ -3,6 +3,7 @@ import React from 'react';
 import { benefits } from "../constants";
 import Section from '@/components/Section';
 import Link from 'next/link';
+import Button from '@/components/Button';
 
 const Benefits = () => {
 
@@ -62,7 +63,7 @@ const Benefits = () => {
 
                   {/* CTA */}
                   <div className="flex items-center text-sm font-semibold text-gray-400 group-hover:text-white transition-colors duration-300">
-                    <span>Learn More</span>
+                    <Button className={undefined} href={'/dashboard'} onClick={undefined} px={undefined} >Learn More</Button>
                     <svg 
                       className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" 
                       fill="none" 

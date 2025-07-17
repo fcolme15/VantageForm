@@ -6,22 +6,20 @@ import { Users, Star, Plus, Activity } from 'lucide-react';
 import Dropdown from '@/components/dashboard/Dropdown';
 import PlayerCard from '@/components/dashboard/PlayerCard';
 import PlayerSearchComponent from '@/components/dashboard/SearchBar';
-import ProjectionChart from '@/components/dashboard/ProjectionChart';
 // import ComparisonPlayerCard from './dashboard/PlayerComparisonCard';
-import SaveModel from "@/components/dashboard/SaveModel";
-import {Sport, MLModel, Player, ProjectionType, RawPlayer } from "@/components/dashboard/Interfaces"
-import { PROJECTION_TYPES, SAVED_PROJECTIONS } from "@/constants/tempDashData"
+import {Sport, Player, RawPlayer, SavedProjection } from "@/components/dashboard/Interfaces"
 import { useSportsApi } from "@/services/apiservices"
+// import CustomBarChart from "@/components/dashboard/ProjectionChart"
 
 export default function Dashboard() {
   const [selectedSport, setSelectedSport] = useState<Sport>({name:'Football'});
   const [players, setPlayers] = useState<Player[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
-  const [selectedProjection, setSelectedProjection] = useState<ProjectionType>(PROJECTION_TYPES[0]);
-  const [showSaveModel, setShowSaveModel] = useState<boolean>(false);
   const [recentPlayers, updateRecentPlayers] = useState<Player[]>([]);
-  const [projections, setProjections] = useState<number[]>([]);
-
+  const [projections, setProjections] = useState<number[]>([0,0,0]);
+  const [updatingProjection, setUpdatingProjection] = useState<boolean>(false);
+  const [savedProjections, setSavedProjections] = useState<SavedProjection[]>([]);
+  const date = new Date();
   // const { getAuthHeader, session, user } = useAuth();
   const [sports, setSports] = useState<Sport[]>([]);
   const { dashboardGeneralInfo, getPlayersBySport,
@@ -38,20 +36,6 @@ export default function Dashboard() {
     'TE': 'Receiving Yards',
   }
 
-
-  const handleSaveProjection = (player: Player, projection: ProjectionType) => {
-    setSelectedPlayer(player);
-    setSelectedProjection(projection);
-  };
- 
-  const handleSave = (type: 'projection' | 'lineup') => {
-    // Here you would make API calls to save the data
-    console.log(`Saving as ${type}:`, {
-      player: selectedPlayer,
-      projection: selectedProjection
-    });
-    setShowSaveModel(false);
-  };
 
   useEffect(() => {
     const fetchAllPredictions = async () => {
@@ -80,31 +64,9 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchAllPredictions = async () => {
-      // const wrPlayerInfo = ['Justin Jefferson', 'Chicago Bears'];
-      // const tePlayerInfo = ['George Kittle', 'Chicago Bears'];
-      // const qbPlayerInfo = ['Lamar Jackson', 'Chicago Bears'];
-
       try {
         const data = await dashboardGeneralInfo();
         setSports(data.sports as Sport[]);
-
-        // let result = await wrReceivingYardsLightGBMPrediction(wrPlayerInfo);
-        // console.log('wr lightgbm', result);
-        //
-        // result = await wrReceivingYardsElasticNetPrediction(wrPlayerInfo);
-        // console.log('wr elasticnet', result);
-        //
-        // result = await teReceivingYardsLightGBMPrediction(tePlayerInfo);
-        // console.log('te lightgbm', result);
-        //
-        // result = await teReceivingYardsElasticNetPrediction(tePlayerInfo);
-        // console.log('te elasticnet', result);
-        //
-        // result = await qbPassingYardsLightGBMPrediction(qbPlayerInfo);
-        // console.log('qb lightgbm', result);
-        //
-        // result = await qbPassingYardsElasticNetPrediction(qbPlayerInfo);
-        // console.log('qb elasticnet', result);
       } catch (error) {
         console.error('Failed to fetch predictions:', error);
       }
@@ -124,7 +86,6 @@ export default function Dashboard() {
     if (!isDuplicate) {
       updateRecentPlayers([newPlayer, ...recentPlayers])
     }
-
   };
 
   useEffect(() => {
@@ -132,7 +93,9 @@ export default function Dashboard() {
       const fetchAllPredictions = async () => {
         const playerInfo = [selectedPlayer.name , 'Chicago Bears']
         try {
+          setUpdatingProjection(true);
           switch (selectedPlayer?.position){
+
             case 'WR':
               const lightGBMPredictionwr = await wrReceivingYardsLightGBMPrediction(playerInfo);
               const elasticNetPredictionwr = await wrReceivingYardsElasticNetPrediction(playerInfo);
@@ -155,6 +118,7 @@ export default function Dashboard() {
               setProjections([lightGBMPredictionte.prediction.toFixed(2), elasticNetPredictionte.prediction.toFixed(2)]);
               break;
           }
+          setUpdatingProjection(false);
         } catch (error) {
           console.error('Failed to fetch predictions:', error);
         }
@@ -263,23 +227,39 @@ export default function Dashboard() {
                       </div>
                     </div>
                     <button
-                      onClick={() => setShowSaveModel(true)}
+                      onClick={() => {
+                        console.log(updatingProjection);
+                        if (selectedPlayer && projections && !updatingProjection) {
+                          const isDuplicate = savedProjections.find(proj => proj.player.id === selectedPlayer.id);
+                          if (!isDuplicate) {
+                            const newProjection = {
+                              'player': selectedPlayer,
+                              'projection1': projections[0],
+                              'projection2': projections[1],
+                              'date': date.toLocaleString(),
+                            }
+                            setSavedProjections([newProjection, ...savedProjections])
+                          }
+                        }
+                      }}
+
+
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
                     >
                       <Plus className="w-4 h-4" />
-                      Save
+                      {updatingProjection ?'Loading':'Save'}
                     </button>
                   </div>
 
                   <div className="flex-1 overflow-y-auto">
-                    <div className="mb-6">
+                    <div className="mb-12">
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         Projection Type: {selectedPlayer ? projectionByPosition[selectedPlayer.position as Position] || 'Unknown' : 'Select a player'}
                       </label>
 
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
                       <div className="bg-[#0B1901]/50 rounded-lg p-4 text-center">
                         <div className="text-2xl font-bold text-green-400">{projections[0]}</div>
                         <div className="text-sm text-gray-300">Projected Using LightGBM</div>
@@ -289,11 +269,10 @@ export default function Dashboard() {
                         <div className="text-sm text-gray-300">Projected Using ElasticNet</div>
                       </div>
                     </div>
-
-                    <div className="min-h-[200px]">
-                      <ProjectionChart data={[]} type={selectedProjection} />
-                    </div>
                   </div>
+                  {/*<div className="min-h-[150px]">*/}
+                  {/*  <CustomBarChart data={projections} />*/}
+                  {/*</div>*/}
                 </>
               ) : (
                 <div className="text-center py-12">
@@ -313,22 +292,22 @@ export default function Dashboard() {
               </h3>
             </div>
             <div className="space-y-3 max-h-[calc(100%-4rem)] scrollbar-hide overflow-y-auto">
-              {SAVED_PROJECTIONS.map((proj) => (
+              {savedProjections.map((proj) => (
                 <button
-                  key={proj.id}
+                  key={proj.player.id}
                   onClick={() => {
-                    const player = recentPlayers.find(p => p.name === proj.player);
-                    const projection = PROJECTION_TYPES.find(p => p.name === proj.projection);
-                    if (player && projection) {
-                      handleSaveProjection(player, projection);
-                    }
+                    // const player = proj.player;
+                    // const projection1 = proj.projection1;
+                    // const projection2 = proj.projection2;
+                    setSelectedPlayer(proj.player);
                   }}
                   className="w-full bg-[#0B1901]/50 hover:bg-green-800/30 rounded-lg p-3 text-left transition-all"
                 >
-                  <div className="font-medium text-white text-sm">{proj.player}</div>
-                  <div className="text-xs text-gray-300">{proj.projection}</div>
+                  <div className="font-medium text-white text-sm">{proj.player.name}</div>
+                  <div className="text-xs text-gray-300">{projectionByPosition[proj.player.position as Position] || 'Unknown'}</div>
                   <div className="flex justify-between items-center mt-1">
-                    <span className="text-green-400 font-bold">{proj.value}</span>
+                    <span className="text-green-400 font-bold">{proj.projection1}</span>
+                    <span className="text-green-400 font-bold">{proj.projection2}</span>
                     <span className="text-xs text-gray-400">{proj.date}</span>
                   </div>
                 </button>
@@ -428,11 +407,11 @@ export default function Dashboard() {
         {/*  </div>*/}
         {/*</div>*/}
 
-        <SaveModel
-          isOpen={showSaveModel}
-          onClose={() => setShowSaveModel(false)}
-          onSave={handleSave}
-        />
+        {/*<SaveModel*/}
+        {/*  isOpen={showSaveModel}*/}
+        {/*  onClose={() => setShowSaveModel(false)}*/}
+        {/*  onSave={handleSave}*/}
+        {/*/>*/}
       </div>
     </div>
   );

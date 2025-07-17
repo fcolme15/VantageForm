@@ -118,7 +118,7 @@ const Services = () => {
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <div>
-                    <span className="text-white font-semibold">Several Metrics Analyzed Per Player</span>
+                    <span className="text-white font-semibold">Many Windows of Metrics Analyzed Per Player</span>
                   </div>
                 </li>
                 <li className="flex items-start py-3 border-t border-neutral-600">
@@ -126,7 +126,7 @@ const Services = () => {
                     <span className="text-white text-xs">✓</span>
                   </div>
                   <div>
-                    <span className="text-white font-semibold">Football, Basketball, Baseball & More</span>
+                    <span className="text-white font-semibold">Football & More Coming</span>
                   </div>
                 </li>
               </ul>
@@ -139,7 +139,7 @@ const Services = () => {
                   <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-white text-sm font-semibold">Processing live data...</span>
                 </div>
-                <div className="text-neutral-300 text-sm italic">Trained on 100+ player profiles and 1000+ data points.</div>
+                <div className="text-neutral-300 text-sm italic">Trained on 100+ player profiles and 2000+ data points.</div>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@ const Services = () => {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold text-white">200+</div>
+                    <div className="text-2xl font-bold text-white">50+</div>
                     <div className="text-neutral-400 text-sm">Metrics Tracked</div>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center">
@@ -201,7 +201,7 @@ const Services = () => {
                 <div className="flex flex-wrap gap-2">
                   <span className="bg-neutral-600/50 text-neutral-200 px-3 py-1 rounded-full text-sm">Heat Maps</span>
                   <span className="bg-neutral-600/50 text-neutral-200 px-3 py-1 rounded-full text-sm">Trend Analysis</span>
-                  <span className="bg-neutral-600/50 text-neutral-200 px-3 py-1 rounded-full text-sm">Comparisons</span>
+                  <span className="bg-neutral-600/50 text-neutral-200 px-3 py-1 rounded-full text-sm">Comparisons Coming</span>
                 </div>
               </div>
             </div>

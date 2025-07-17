@@ -15,8 +15,6 @@ const Pricing = () => {
       id="pricing"
     >
       <div className="container relative z-2">
-
-        {/* Heading */}
         <Heading
                   tag="Get started with VantageForm"
                   title="Premium Experience" className={"text-white"} text={undefined}        />

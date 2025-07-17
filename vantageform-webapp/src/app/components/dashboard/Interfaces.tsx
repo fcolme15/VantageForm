@@ -27,10 +27,9 @@ export interface ProjectionType {
 }
 
 export interface SavedProjection {
-    id: number;
-    player: string;
-    projection: string;
-    value: string;
+    player: Player;
+    projection1: number;
+    projection2: number;
     date: string;
 }
 

@@ -62,7 +62,7 @@ function About() {
               <ScrollParallax strength={-0.2}>
                 <div className="bg-n-6 border border-n-5 rounded-lg p-3 shadow-lg">
                   <div className="text-xs text-n-3 mb-1">Prediction Accuracy</div>
-                  <div className="text-lg font-bold text-green-400">94.2%</div>
+                  <div className="text-lg font-bold text-green-400">84.2%</div>
                 </div>
               </ScrollParallax>
             </div>
@@ -71,7 +71,7 @@ function About() {
               <ScrollParallax strength={0.3}>
                 <div className="bg-n-6 border border-n-5 rounded-lg p-3 shadow-lg">
                   <div className="text-xs text-n-3 mb-1">Models Trained</div>
-                  <div className="text-lg font-bold text-blue-400">100+</div>
+                  <div className="text-lg font-bold text-blue-400">10+</div>
                 </div>
               </ScrollParallax>
             </div>
@@ -103,8 +103,8 @@ function About() {
                   <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg mb-4 flex items-center justify-center">
                     <div className="w-6 h-6 bg-white/20 rounded" />
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">Deep Learning Models</h3>
-                  <p className="text-n-3 text-sm">Neural networks trained on thousands of historical data points for maximum accuracy.</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">Deep Learning Model</h3>
+                  <p className="text-n-3 text-sm">A Neural network trained on thousands of historical data points for maximum accuracy.</p>
                 </div>
                 
                 <div className="bg-n-7 border border-n-6 rounded-xl p-6 hover:border-green-500/50 transition-colors">
