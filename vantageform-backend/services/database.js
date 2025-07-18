@@ -105,22 +105,6 @@ class DatabaseService {
     }
   }
 
-  // async getModelNames() {
-  //   this._checkConnection();
-  //
-  //   try {
-  //     const { data, error } = await supabase
-  //         .from('models')
-  //         .select('name');
-  //
-  //     if (error) throw error;
-  //     return { success: true, data };
-  //   }
-  //   catch(error) {
-  //     console.error('Error getting sports name:', error);
-  //     return { success: false, error: error.message };
-  //   }
-  // }
 
   async getPlayerNamesBySport(sportName) {
     this._checkConnection();

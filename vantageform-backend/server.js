@@ -13,9 +13,11 @@ const app = express();
 //Middleware 
 app.use(cors({
     origin: ['https://vantageform.com', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
+
 app.use(express.json());
 
 //Routes
@@ -30,4 +32,15 @@ app.get('/', (req,res) => {
 const PORT = process.env.PORT || 3001
 app.listen(PORT, ()=>{
     console.log(`Server running on port ${PORT}`);
+});
+
+// Catch unmatched routes
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Route not found' });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err.stack);
+    res.status(500).json({ error: 'Internal Server Error' });
 });
