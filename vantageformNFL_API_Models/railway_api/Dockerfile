@@ -23,4 +23,4 @@ RUN echo "Looking for .pkl files:" && find /app -name "*.pkl" -type f
 EXPOSE 10000
 
 # Start the app
-CMD ["uvicorn", "app:app", "--host=0.0.0.0", "--port=10000"]
+CMD ["uvicorn", "app:app", "--host=0.0.0.0", "--port=" + process.env.PORT]
