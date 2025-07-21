@@ -19,6 +19,8 @@ export default function Dashboard() {
   const [projections, setProjections] = useState<number[]>([0,0,0]);
   const [updatingProjection, setUpdatingProjection] = useState<boolean>(false);
   const [savedProjections, setSavedProjections] = useState<SavedProjection[]>([]);
+  const [savedProjectionPredictions, setSavedProjectionPredictions] = useState<SavedProjection[]>([]);
+
   const date = new Date();
   // const { getAuthHeader, session, user } = useAuth();
   const [sports, setSports] = useState<Sport[]>([]);
@@ -31,7 +33,7 @@ export default function Dashboard() {
 
   const projectionByPosition: Record<Position, string> = {
     'WR': 'Receiving Yards',
-    'RB': 'Rushing Yards',
+    'RB': 'Receiving Yards',
     'QB': 'Passing Yards',
     'TE': 'Receiving Yards',
   }
@@ -63,10 +65,18 @@ export default function Dashboard() {
 
 
   useEffect(() => {
+    const playerInfo = ['Justin Jefferson' , 'Chicago Bears']
     const fetchAllPredictions = async () => {
       try {
+        setUpdatingProjection(true);
         const data = await dashboardGeneralInfo();
         setSports(data.sports as Sport[]);
+        const lightGBMPredictionwr = await wrReceivingYardsLightGBMPrediction(playerInfo);
+        const elasticNetPredictionwr = await wrReceivingYardsElasticNetPrediction(playerInfo);
+        console.log(lightGBMPredictionwr);
+        setProjections([lightGBMPredictionwr.prediction.toFixed(2), elasticNetPredictionwr.prediction.toFixed(2)]);
+        setUpdatingProjection(false);
+
       } catch (error) {
         console.error('Failed to fetch predictions:', error);
       }
@@ -89,36 +99,54 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    setProjections([0, 0]);
     if (selectedPlayer) {
+      const exists = savedProjectionPredictions.find(currPlayer => currPlayer.player.id === selectedPlayer.id);
+
+      if (exists){
+        setProjections([exists.projection1, exists.projection2]);
+        return;
+      }
       const fetchAllPredictions = async () => {
         const playerInfo = [selectedPlayer.name , 'Chicago Bears']
         try {
+          let currProjections:number[] = []
           setUpdatingProjection(true);
           switch (selectedPlayer?.position){
-
             case 'WR':
               const lightGBMPredictionwr = await wrReceivingYardsLightGBMPrediction(playerInfo);
               const elasticNetPredictionwr = await wrReceivingYardsElasticNetPrediction(playerInfo);
-              console.log(lightGBMPredictionwr);
               setProjections([lightGBMPredictionwr.prediction.toFixed(2), elasticNetPredictionwr.prediction.toFixed(2)]);
+              currProjections = [lightGBMPredictionwr.prediction.toFixed(2),elasticNetPredictionwr.prediction.toFixed(2)]
               break;
             case 'RB':
               const lightGBMPredictionrb = await teReceivingYardsLightGBMPrediction(playerInfo);
               const elasticNetPredictionrb = await teReceivingYardsElasticNetPrediction(playerInfo);
               setProjections([lightGBMPredictionrb.prediction.toFixed(2), elasticNetPredictionrb.prediction.toFixed(2)]);
+              currProjections = [lightGBMPredictionrb.prediction.toFixed(2),elasticNetPredictionrb.prediction.toFixed(2)]
               break;
             case 'QB':
               const lightGBMPredictionqb = await qbPassingYardsLightGBMPrediction(playerInfo);
               const elasticNetPredictionqb = await qbPassingYardsElasticNetPrediction(playerInfo);
               setProjections([lightGBMPredictionqb.prediction.toFixed(2), elasticNetPredictionqb.prediction.toFixed(2)]);
+              currProjections = [lightGBMPredictionqb.prediction.toFixed(2),elasticNetPredictionqb.prediction.toFixed(2)]
               break;
             default:
               const lightGBMPredictionte = await teReceivingYardsLightGBMPrediction(playerInfo);
               const elasticNetPredictionte = await teReceivingYardsElasticNetPrediction(playerInfo);
               setProjections([lightGBMPredictionte.prediction.toFixed(2), elasticNetPredictionte.prediction.toFixed(2)]);
+              currProjections = [lightGBMPredictionte.prediction.toFixed(2),elasticNetPredictionte.prediction.toFixed(2)];
               break;
           }
+
           setUpdatingProjection(false);
+          const newProjection = {
+            'player': selectedPlayer,
+            'projection1': currProjections[0],
+            'projection2': currProjections[1],
+            'date': date.toLocaleString(),
+          }
+          setSavedProjectionPredictions([newProjection, ...savedProjectionPredictions])
         } catch (error) {
           console.error('Failed to fetch predictions:', error);
         }
@@ -173,20 +201,6 @@ export default function Dashboard() {
               placeholder="Choose sport..."
             />
           </div>
-
-          {/* ML Model Selection */}
-          {/*<div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50 z-20">*/}
-          {/*  <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">*/}
-          {/*    <BarChart3 className="w-4 h-4" />*/}
-          {/*    ML Model*/}
-          {/*  </label>*/}
-          {/*  <Dropdown*/}
-          {/*    options={ML_MODELS}*/}
-          {/*    selected={selectedModel}*/}
-          {/*    onSelect={(option) => setSelectedModel(option as MLModel)}*/}
-          {/*    placeholder="Select model..."*/}
-          {/*  />*/}
-          {/*</div>*/}
 
           {/* Recent Players */}
           <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">

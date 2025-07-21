@@ -102,7 +102,7 @@ const PlayerSearchComponent: React.FC<PlayerSearchComponentProps> = ({
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-6 z-10">
 
             <div className="bg-gradient-to-br from-n-8 to-n-6 backdrop-blur-sm rounded-xl p-4 border border-green-800/50">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
