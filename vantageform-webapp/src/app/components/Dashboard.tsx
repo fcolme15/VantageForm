@@ -27,13 +27,14 @@ export default function Dashboard() {
   const { dashboardGeneralInfo, getPlayersBySport,
     wrReceivingYardsLightGBMPrediction, wrReceivingYardsElasticNetPrediction,
     teReceivingYardsLightGBMPrediction, teReceivingYardsElasticNetPrediction,
+    rbRushingYardsLightGBMPrediction, rbRushingYardsElasticNetPrediction,
     qbPassingYardsLightGBMPrediction, qbPassingYardsElasticNetPrediction} = useSportsApi();
 
   type Position = 'WR' | 'RB' | 'QB' | 'TE';
 
   const projectionByPosition: Record<Position, string> = {
     'WR': 'Receiving Yards',
-    'RB': 'Receiving Yards',
+    'RB': 'Rushing Yards',
     'QB': 'Passing Yards',
     'TE': 'Receiving Yards',
   }
@@ -112,8 +113,8 @@ export default function Dashboard() {
               currProjections = [lightGBMPredictionwr.prediction.toFixed(2),elasticNetPredictionwr.prediction.toFixed(2)]
               break;
             case 'RB':
-              const lightGBMPredictionrb = await teReceivingYardsLightGBMPrediction(playerInfo);
-              const elasticNetPredictionrb = await teReceivingYardsElasticNetPrediction(playerInfo);
+              const lightGBMPredictionrb = await rbRushingYardsLightGBMPrediction(playerInfo);
+              const elasticNetPredictionrb = await rbRushingYardsElasticNetPrediction(playerInfo);
               setProjections([lightGBMPredictionrb.prediction.toFixed(2), elasticNetPredictionrb.prediction.toFixed(2)]);
               currProjections = [lightGBMPredictionrb.prediction.toFixed(2),elasticNetPredictionrb.prediction.toFixed(2)]
               break;

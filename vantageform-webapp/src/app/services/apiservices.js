@@ -257,10 +257,78 @@ export const useSportsApi = () => {
         }
     };
 
+    const rbRushingYardsElasticNetPrediction = async (playerInfo) => {
+
+        const headers = getAuthHeader();
+        if (!headers.Authorization) return;
+
+        try {
+            // Add query parameters to the URL
+            const playerName = playerInfo[0];
+            const opponent = playerInfo[1];
+            const queryParams = new URLSearchParams({
+                playerName: playerName,
+                opponent: opponent
+            });
+
+            const response = await fetch(`${API_BASE_URL}/prediction/elasticnet/rbrushingyards?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error, ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            return result.data;
+        } catch (error) {
+            console.error('Error fetching prediction', error);
+        }
+    };
+
+    const rbRushingYardsLightGBMPrediction = async (playerInfo) => {
+        const headers = getAuthHeader();
+        if (!headers.Authorization) return;
+
+        try {
+            // Add query parameters to the URL
+            const playerName = playerInfo[0];
+            const opponent = playerInfo[1];
+            const queryParams = new URLSearchParams({
+                playerName: playerName,
+                opponent: opponent
+            });
+
+            const response = await fetch(`${API_BASE_URL}/prediction/lightgbm/rbrushingyards?${queryParams}`, {
+                method: 'GET',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error, ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            return result.data;
+        } catch (error) {
+            console.error('Error fetching prediction', error);
+        }
+    };
+
     return {
         dashboardGeneralInfo, getPlayersBySport,
         wrReceivingYardsElasticNetPrediction, wrReceivingYardsLightGBMPrediction,
         teReceivingYardsElasticNetPrediction, teReceivingYardsLightGBMPrediction,
         qbPassingYardsElasticNetPrediction, qbPassingYardsLightGBMPrediction,
+        rbRushingYardsElasticNetPrediction, rbRushingYardsLightGBMPrediction
     };
 };
