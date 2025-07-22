@@ -53,7 +53,7 @@ async def lifespan(app: FastAPI):
     global elasticnet_receiving_yards_wr_model, lightgbm_receiving_yards_wr_model
     global elasticnet_receiving_yards_te_model, lightgbm_receiving_yards_te_model
     global elasticnet_passing_yards_qb_model, lightgbm_passing_yards_qb_model
-    # global elasticnet_rushing_yards_rb_model, lightgbm_rushing_yards_rb_model
+    global elasticnet_rushing_yards_rb_model, lightgbm_rushing_yards_rb_model
     
     try:
         elasticnet_receiving_yards_wr_model = load_model('wrReceivingYardsElasticNet.pkl')
@@ -65,8 +65,8 @@ async def lifespan(app: FastAPI):
         elasticnet_passing_yards_qb_model = load_model('qbPassingYardsElasticNet.pkl')
         lightgbm_passing_yards_qb_model = load_model('qbPassingYardsLightGBM.pkl')
 
-        # elasticnet_rushing_yards_rb_model = load_model('rbRushingYardsElasticNet.pkl')
-        # lightgbm_rushing_yards_rb_model = load_model('rbRushingYardsLightGBM.pkl')
+        elasticnet_rushing_yards_rb_model = load_model('rbRushingYardsElasticNet.pkl')
+        lightgbm_rushing_yards_rb_model = load_model('rbRushingYardsLightGBM.pkl')
     except Exception as e:
         raise RuntimeError(f"Failed to load models: {e}")
     
@@ -218,39 +218,39 @@ async def get_lightgbm_features():
 # RB Models and API Endpoints
 ############################################################################
 
-# @app.post("/predict/rushingYardsRbElasticnet")
-# async def predict_elasticnet(player_data: Dict[str, Any]):
-#     if elasticnet_rushing_yards_rb_model is None:
-#         raise HTTPException(status_code=500, detail="ElasticNet model not loaded")
+@app.post("/predict/rushingYardsRbElasticnet")
+async def predict_elasticnet(player_data: Dict[str, Any]):
+    if elasticnet_rushing_yards_rb_model is None:
+        raise HTTPException(status_code=500, detail="ElasticNet model not loaded")
     
-#     try:
-#         prediction = predictElasticNet(player_data, elasticnet_rushing_yards_rb_model)
-#         return {"prediction": float(prediction)}
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
+    try:
+        prediction = predictElasticNet(player_data, elasticnet_rushing_yards_rb_model)
+        return {"prediction": float(prediction)}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
 
-# @app.post("/predict/rushingYardsRbLightgbm")
-# async def predict_lightgbm(player_data: Dict[str, Any]):
-#     if lightgbm_rushing_yards_rb_model is None:
-#         raise HTTPException(status_code=500, detail="LightGBM model not loaded")
+@app.post("/predict/rushingYardsRbLightgbm")
+async def predict_lightgbm(player_data: Dict[str, Any]):
+    if lightgbm_rushing_yards_rb_model is None:
+        raise HTTPException(status_code=500, detail="LightGBM model not loaded")
     
-#     try:
-#         prediction = predictLightGBM(player_data, lightgbm_rushing_yards_rb_model)
-#         return {"prediction": float(prediction)}
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
+    try:
+        prediction = predictLightGBM(player_data, lightgbm_rushing_yards_rb_model)
+        return {"prediction": float(prediction)}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Prediction failed: {str(e)}")
 
-# @app.get("/model/rbElasticnet/features")
-# async def get_elasticnet_features():
-#     if elasticnet_rushing_yards_rb_model is None:
-#         raise HTTPException(status_code=500, detail="ElasticNet model not loaded")
+@app.get("/model/rbElasticnet/features")
+async def get_elasticnet_features():
+    if elasticnet_rushing_yards_rb_model is None:
+        raise HTTPException(status_code=500, detail="ElasticNet model not loaded")
     
-#     return {"features": elasticnet_rushing_yards_rb_model['feature_names']}
+    return {"features": elasticnet_rushing_yards_rb_model['feature_names']}
 
-# @app.get("/model/rbLightgbm/features")
-# async def get_lightgbm_features():
-#     if lightgbm_rushing_yards_rb_model is None:
-#         raise HTTPException(status_code=500, detail="LightGBM model not loaded")
+@app.get("/model/rbLightgbm/features")
+async def get_lightgbm_features():
+    if lightgbm_rushing_yards_rb_model is None:
+        raise HTTPException(status_code=500, detail="LightGBM model not loaded")
     
-#     return {"features": lightgbm_rushing_yards_rb_model['feature_names']}
+    return {"features": lightgbm_rushing_yards_rb_model['feature_names']}
     

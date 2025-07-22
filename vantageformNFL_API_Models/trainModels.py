@@ -64,7 +64,7 @@ exclude_columns_per_model = {
 model_paths = {
     'WR': ['wrReceivingYardsLightGBM.pkl', 'wrReceivingYardsElasticNet.pkl'],
     'QB': ['qbPassingYardsLightGBM.pkl', 'qbPassingYardsElasticNet.pkl'],
-    'RB': ['rbRushingYardsLightGBM.pkl', ' rbRushingYardsElasticNet.pkl'],
+    'RB': ['rbRushingYardsLightGBM.pkl', 'rbRushingYardsElasticNet.pkl'],
     'TE': ['teReceivingYardsLightGBM.pkl', 'teReceivingYardsElasticNet.pkl'],
 }
 

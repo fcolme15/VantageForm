@@ -14,7 +14,7 @@ import { useSportsApi } from "@/services/apiservices"
 export default function Dashboard() {
   const [selectedSport, setSelectedSport] = useState<Sport>({name:'Football'});
   const [players, setPlayers] = useState<Player[]>([]);
-  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+  const [selectedPlayer, setSelectedPlayer] = useState<Player>();
   const [recentPlayers, updateRecentPlayers] = useState<Player[]>([]);
   const [projections, setProjections] = useState<number[]>([0,0,0]);
   const [updatingProjection, setUpdatingProjection] = useState<boolean>(false);
@@ -52,8 +52,6 @@ export default function Dashboard() {
         }));
 
         setPlayers(transformed);
-        console.log(players);
-
       } catch (error) {
         console.error('Failed to fetch predictions:', error);
       }
@@ -65,17 +63,10 @@ export default function Dashboard() {
 
 
   useEffect(() => {
-    const playerInfo = ['Justin Jefferson' , 'Chicago Bears']
     const fetchAllPredictions = async () => {
       try {
-        setUpdatingProjection(true);
         const data = await dashboardGeneralInfo();
         setSports(data.sports as Sport[]);
-        const lightGBMPredictionwr = await wrReceivingYardsLightGBMPrediction(playerInfo);
-        const elasticNetPredictionwr = await wrReceivingYardsElasticNetPrediction(playerInfo);
-        console.log(lightGBMPredictionwr);
-        setProjections([lightGBMPredictionwr.prediction.toFixed(2), elasticNetPredictionwr.prediction.toFixed(2)]);
-        setUpdatingProjection(false);
 
       } catch (error) {
         console.error('Failed to fetch predictions:', error);
@@ -87,6 +78,7 @@ export default function Dashboard() {
     // Call the async function
     fetchAllPredictions();
     setSelectedSport({name:'Football'})
+
   }, []);
 
   const handlePlayerSelect = (newPlayer: Player) => {
